@@ -14,20 +14,36 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(new Uint32Array(anecdotes.length))
+  const [mostPopularIndex, setMostPopularIndex] = useState(0)
+
+  const getMaxIndex = (arr) => {
+    let maxValue = arr[0]
+    let maxIndex = 0
+    for(let i = 1; i < arr.length; i++) {
+      if(arr[i] > maxValue) {
+        maxValue = arr[i]
+        maxIndex = i
+      }
+    }
+    return maxIndex
+  }
 
   const addVote = (index) => {
     const copy = [...votes]
     copy[index] += 1
     setVotes(copy)
+    setMostPopularIndex(getMaxIndex(copy))
   }
 
-  console.log(selected)
-  console.log(votes)
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}<br/>
+      has {votes[selected]} votes<br />
       <button onClick={() => addVote(selected)}>vote</button>
       <button onClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      {anecdotes[mostPopularIndex]}
     </div>
   )
 }
