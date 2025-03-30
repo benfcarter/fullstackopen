@@ -14,6 +14,7 @@ const CourseList = ({ courseList }) => {
     </>
   )
 }
+
 const App = () => {
   const courses = [
     {
