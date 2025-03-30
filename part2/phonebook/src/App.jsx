@@ -1,18 +1,38 @@
 import { useState } from 'react'
 
-const NumberEntry = ({ number }) => {
+const Person = ({ person }) => {
   return (
-    <div>{number.name} {number.number}</div>
+    <div>{person.name} {person.number}</div>
   )
 }
 
-const NumberList = ({ numbers, nameFilter }) => {
+const Persons = ({ persons, nameFilter }) => {
   return (
     <>
-      {numbers
+      {persons
         .filter((x) => x.name.toUpperCase().includes(nameFilter.toUpperCase()))
-        .map((x) => <NumberEntry key={x.name} number={x} />)}
+        .map((x) => <Person key={x.name} person={x} />)}
     </>
+  )
+}
+
+const Filter = ({ filterString, onFilterStringChange }) => {
+  return (
+    <div>filter shown with <input value={filterString} onChange={onFilterStringChange} /></div>
+  )
+}
+
+const PersonForm = ({ name, onNameChange, number, onNumberChange, addPerson }) => {
+  return (
+    <form onSubmit={addPerson}>
+      <div>
+        <div>name: <input value={name} onChange={onNameChange} /></div>
+        <div>number: <input value={number} onChange={onNumberChange} /></div>
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
   )
 }
 
@@ -38,8 +58,8 @@ const App = () => {
   const handleNameFilterChange = (event) => {
     setNameFilter(event.target.value)
   }
-
-  const addName = (event) => {
+  
+  const addPerson = (event) => {
     event.preventDefault()
 
     if(persons.some((person) => person.name === newName)) {
@@ -56,20 +76,12 @@ const App = () => {
   
   return (
     <div>
-      <h1>Phonebook</h1>
-      <div>filter shown with <input value={nameFilter} onChange={handleNameFilterChange} /></div>
-      <h2>add a new</h2>
-      <form onSubmit={addName}>
-        <div>
-          <div>name: <input value={newName} onChange={handleNameChange} /></div>
-          <div>number: <input value={newNumber} onChange={handleNumberChange} /></div>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <NumberList numbers={persons} nameFilter={nameFilter}/>
+      <h2>Phonebook</h2>
+      <Filter filterString={nameFilter} onFilterStringChange={handleNameFilterChange}  />
+      <h3>add a new</h3>
+      <PersonForm name={newName} onNameChange={handleNameChange} number={newNumber} onNumberChange={handleNumberChange} addPerson={addPerson} />
+      <h3>Numbers</h3>
+      <Persons persons={persons} nameFilter={nameFilter}/>
     </div>
   )
 }
