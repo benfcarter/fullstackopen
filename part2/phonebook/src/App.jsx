@@ -6,10 +6,12 @@ const NumberEntry = ({ number }) => {
   )
 }
 
-const NumberList = ({ numbers }) => {
+const NumberList = ({ numbers, nameFilter }) => {
   return (
     <>
-      {numbers.map((x) => <NumberEntry key={x.name} number={x} />)}
+      {numbers
+        .filter((x) => x.name.toUpperCase().includes(nameFilter.toUpperCase()))
+        .map((x) => <NumberEntry key={x.name} number={x} />)}
     </>
   )
 }
@@ -23,6 +25,7 @@ const App = () => {
   ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [nameFilter, setNameFilter] = useState('')
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -30,6 +33,10 @@ const App = () => {
 
   const handleNumberChange = (event) => {
     setNewNumber(event.target.value)
+  }
+
+  const handleNameFilterChange = (event) => {
+    setNameFilter(event.target.value)
   }
 
   const addName = (event) => {
@@ -49,7 +56,9 @@ const App = () => {
   
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <div>filter shown with <input value={nameFilter} onChange={handleNameFilterChange} /></div>
+      <h2>add a new</h2>
       <form onSubmit={addName}>
         <div>
           <div>name: <input value={newName} onChange={handleNameChange} /></div>
@@ -60,7 +69,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <NumberList numbers={persons} />
+      <NumberList numbers={persons} nameFilter={nameFilter}/>
     </div>
   )
 }
