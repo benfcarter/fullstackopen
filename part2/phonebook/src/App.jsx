@@ -3,16 +3,33 @@ import personService from './services/persons'
 
 const Person = ({ person }) => {
   return (
-    <div>{person.name} {person.number}</div>
+    <>
+      {person.name} {person.number}
+    </>
   )
 }
 
-const Persons = ({ persons, nameFilter }) => {
+const DeletePersonButton = ({ person, deleteMethod }) => {
+  return (
+    <button onClick={() => deleteMethod(person)}>delete</button>
+  )
+}
+
+const PersonRow = ({ person, deleteMethod }) => {
+  return (
+    <div>
+      <Person person={person} /> <DeletePersonButton person={person} deleteMethod={deleteMethod} />
+    </div>
+  )
+}
+
+const Persons = ({ persons, nameFilter, deleteMethod }) => {
   return (
     <>
       {persons
         .filter((x) => x.name.toUpperCase().includes(nameFilter.toUpperCase()))
-        .map((x) => <Person key={x.id} person={x} />)}
+        .map((x) => <PersonRow key={x.id} person={x} deleteMethod={deleteMethod} />
+      )}
     </>
   )
 }
@@ -77,6 +94,15 @@ const App = () => {
     }
   }
 
+  const deletePerson = (person) => {
+    if(confirm(`Are you sure you want to delete ${person.name}?`))
+    {
+      personService
+      .remove(person.id)
+      .then(data => setPersons(persons.filter(x => x.id != person.id)))
+    }
+  }
+
   useEffect(() => {
     personService
     .getAll()
@@ -92,7 +118,7 @@ const App = () => {
       <h3>add a new</h3>
       <PersonForm name={newName} onNameChange={handleNameChange} number={newNumber} onNumberChange={handleNumberChange} addPerson={addPerson} />
       <h3>Numbers</h3>
-      <Persons persons={persons} nameFilter={nameFilter}/>
+      <Persons persons={persons} nameFilter={nameFilter} deleteMethod={deletePerson} />
     </div>
   )
 }
