@@ -87,6 +87,9 @@ const App = () => {
         personService
         .update(changedNote)
         .then(data => setPersons(persons.map(x => x.id === oldNote.id ? data : x)))
+        .catch(error =>
+          alert(`Update operation failed.  Error: ${error}`)
+        )
       }
     } else {
       const newPerson = {
@@ -100,6 +103,9 @@ const App = () => {
         console.log(data)
         setPersons(persons.concat(data))
       })
+      .catch(error =>
+        alert(`Create operation failed.  Error: ${error}`)
+      )
     }
   }
 
@@ -109,6 +115,9 @@ const App = () => {
       personService
       .remove(person.id)
       .then(data => setPersons(persons.filter(x => x.id != person.id)))
+      .catch(error =>
+        alert(`Delete operation failed.  Error: ${error}`)
+      )
     }
   }
 
@@ -116,6 +125,9 @@ const App = () => {
     personService
     .getAll()
     .then(data => setPersons(data))
+    .catch(error =>
+      alert(`Could not fetch number data.  Error: ${error}`)
+    )
   }, [])
   
   console.log(persons);
