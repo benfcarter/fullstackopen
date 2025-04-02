@@ -54,13 +54,44 @@ const PersonForm = ({ name, onNameChange, number, onNumberChange, addPerson }) =
   )
 }
 
+const Notification = ({ notification }) => {
+  if(notification === null) {
+    return null
+  }
+
+  const errorStyle = {
+    color: 'red',
+    background: 'lightgrey',
+    fontSize: '20px',
+    borderStyle: 'solid',
+    borderRadius: '5px',
+    padding: '10px',
+    marginBottom: '10px'
+  }
+
+  const successStyle = { ...errorStyle, color: 'green' }
+
+  return (
+    <div style={notification.isError ? errorStyle : successStyle}>
+      {notification.message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [nameFilter, setNameFilter] = useState('')
+  const [notification, setNotification] = useState(null)
 
-  const personUrl = 'http://localhost:3001/persons'
+  const notify = (message, isError, timeout = 5000) => {
+    setNotification({ message, isError })
+
+    setTimeout(() => {
+      setNotification(null)
+    }, timeout)
+  }
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -86,9 +117,12 @@ const App = () => {
         console.log(changedNote)
         personService
         .update(changedNote)
-        .then(data => setPersons(persons.map(x => x.id === oldNote.id ? data : x)))
+        .then(data => {
+          setPersons(persons.map(x => x.id === data.id ? data : x))
+          notify(`Updated number for ${data.name}`, false)
+        })
         .catch(error =>
-          alert(`Update operation failed.  Error: ${error}`)
+          notify(`Update operation failed.  Error: ${error}`, true)
         )
       }
     } else {
@@ -100,11 +134,11 @@ const App = () => {
       personService
       .create(newPerson)
       .then((data) => {
-        console.log(data)
         setPersons(persons.concat(data))
+        notify(`Created entry for ${data.name}`, false)
       })
       .catch(error =>
-        alert(`Create operation failed.  Error: ${error}`)
+        notify(`Create operation failed.  Error: ${error}`, true)
       )
     }
   }
@@ -114,9 +148,12 @@ const App = () => {
     {
       personService
       .remove(person.id)
-      .then(data => setPersons(persons.filter(x => x.id != person.id)))
+      .then(data => {
+        setPersons(persons.filter(x => x.id != person.id))
+        notify(`Removed entry for ${data.name}`, false)
+      })
       .catch(error =>
-        alert(`Delete operation failed.  Error: ${error}`)
+        notify(`Delete operation failed.  Error: ${error}`, true)
       )
     }
   }
@@ -126,7 +163,7 @@ const App = () => {
     .getAll()
     .then(data => setPersons(data))
     .catch(error =>
-      alert(`Could not fetch number data.  Error: ${error}`)
+      notify(`Could not fetch number data.  Error: ${error}`, true)
     )
   }, [])
   
@@ -135,6 +172,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification} />
       <Filter filterString={nameFilter} onFilterStringChange={handleNameFilterChange}  />
       <h3>add a new</h3>
       <PersonForm name={newName} onNameChange={handleNameChange} number={newNumber} onNumberChange={handleNumberChange} addPerson={addPerson} />
