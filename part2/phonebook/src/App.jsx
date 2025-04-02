@@ -68,10 +68,11 @@ const App = () => {
         number: newNumber,
       }
 
-      axios
-      .post(personUrl, newPerson)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+      personService
+      .create(newPerson)
+      .then((data) => {
+        console.log(data)
+        setPersons(persons.concat(data))
       })
     }
   }
