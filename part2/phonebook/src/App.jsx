@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Person = ({ person }) => {
   return (
@@ -77,9 +77,9 @@ const App = () => {
   }
 
   useEffect(() => {
-    axios
-    .get(personUrl)
-    .then(response => setPersons(response.data))
+    personService
+    .getAll()
+    .then(data => setPersons(data))
   }, [])
   
   console.log(persons);
