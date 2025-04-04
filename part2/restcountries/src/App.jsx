@@ -9,9 +9,9 @@ const SearchBox = ({ value, onChange }) => {
   )
 }
 
-const CountryInfoEntry = ({ match }) => {
+const CountryInfoEntry = ({ match, onShowCountry }) => {
   return (
-    <div>{match.name.common}</div>
+    <div>{match.name.common} <button onClick={onShowCountry(match)}>Show</button> </div>
   )
 }
 
@@ -30,7 +30,7 @@ const SingleVerboseCountryInfo = ({ match }) => {
   )
 }
 
-const CountryInfo = ({ matches }) => {
+const CountryInfo = ({ matches, selectedCountry, onShowCountry, onHideCountry }) => {
   if(matches.length > 10) {
     return (
       <>
@@ -46,7 +46,7 @@ const CountryInfo = ({ matches }) => {
   } else if(matches.length > 1) {
     return (
       <>
-        {matches.map(match => <CountryInfoEntry key={match.ccn3} match={match} />)}
+        {matches.map(match => <CountryInfoEntry key={match.ccn3} match={match} onShowCountry={onShowCountry} />)}
       </>
     )
   } else {
@@ -61,6 +61,7 @@ const CountryInfo = ({ matches }) => {
 const App = () => {
   const [countryFilter, setCountryFilter] = useState('')
   const [countryData, setCountryData] = useState(null)
+  const [selectedCountry, setSelectedCountry] = useState(null)
 
   const onCountryFilterChange = (event) => {
     setCountryFilter(event.target.value)
@@ -80,7 +81,15 @@ const App = () => {
     return countryData.filter(x => x.name.common.toUpperCase().includes(countryFilter.toUpperCase()))
   }
 
-  console.log(`Current country filter: ${countryFilter}`)
+  const selectCountry = (countryInfo) => {
+    return (() => setSelectedCountry(countryInfo))
+  }
+
+  const clearCountrySelection = () => {
+    return selectCountry(null)
+  }
+
+  console.log(`Selected country: ${selectedCountry.name.common}`)
 
   useEffect(() => {
     console.log(`useEffect`)
@@ -93,11 +102,11 @@ const App = () => {
       <div>Loading country data...</div>
     )
   }
-  
+
   return (
     <>
       <div><SearchBox value={countryFilter} onChange={onCountryFilterChange} /></div>
-      <div><CountryInfo matches={getMatches()} /></div>
+      <div><CountryInfo matches={getMatches()} selectedCountry={selectedCountry} onShowCountry={selectCountry} onHideCountry={clearCountrySelection}/></div>
     </>
   )
 }
