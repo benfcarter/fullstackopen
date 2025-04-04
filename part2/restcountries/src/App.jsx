@@ -30,7 +30,7 @@ const SingleVerboseCountryInfo = ({ match }) => {
   )
 }
 
-const CountryInfo = ({ matches, selectedCountry, onShowCountry, onHideCountry }) => {
+const CountryInfo = ({ matches, onShowCountry }) => {
   if(matches.length > 10) {
     return (
       <>
@@ -61,7 +61,6 @@ const CountryInfo = ({ matches, selectedCountry, onShowCountry, onHideCountry })
 const App = () => {
   const [countryFilter, setCountryFilter] = useState('')
   const [countryData, setCountryData] = useState(null)
-  const [selectedCountry, setSelectedCountry] = useState(null)
 
   const onCountryFilterChange = (event) => {
     setCountryFilter(event.target.value)
@@ -82,14 +81,8 @@ const App = () => {
   }
 
   const selectCountry = (countryInfo) => {
-    return (() => setSelectedCountry(countryInfo))
+    return (() => setCountryFilter(countryInfo.name.common))
   }
-
-  const clearCountrySelection = () => {
-    return selectCountry(null)
-  }
-
-  console.log(`Selected country: ${selectedCountry.name.common}`)
 
   useEffect(() => {
     console.log(`useEffect`)
@@ -106,7 +99,7 @@ const App = () => {
   return (
     <>
       <div><SearchBox value={countryFilter} onChange={onCountryFilterChange} /></div>
-      <div><CountryInfo matches={getMatches()} selectedCountry={selectedCountry} onShowCountry={selectCountry} onHideCountry={clearCountrySelection}/></div>
+      <div><CountryInfo matches={getMatches()} onShowCountry={selectCountry} /></div>
     </>
   )
 }
