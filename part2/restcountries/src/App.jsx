@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import countryService from './services/countries'
+import weatherService from './services/weather'
+
+const weatherApiKey = import.meta.env.VITE_WEATHER_API_KEY
 
 const SearchBox = ({ value, onChange }) => {
   return (
@@ -15,6 +18,36 @@ const CountryInfoEntry = ({ match, onShowCountry }) => {
   )
 }
 
+const SingleCountryWeatherData = ({ countryInfo }) => {
+  const [weatherData, setWeatherData] = useState(null)
+  const [selectedCountry, setSelectedCountry] = useState(null)
+
+  if(selectedCountry != countryInfo) {
+    setSelectedCountry(countryInfo)
+  }
+
+  useEffect(() => {
+    if(selectedCountry !== null) {
+      weatherService.getCurrentConditions(selectedCountry.capital, selectedCountry.ccn3, weatherApiKey)
+      .then(data => setWeatherData(data))
+    }
+  }, [selectedCountry])
+
+  if(weatherData === null) {
+    return (
+      <div>Fetching weather data...</div>
+    ) 
+  }
+
+  return (
+    <>
+      <div>Temperature: {weatherData.main.temp} F</div>
+      <div><img src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`} /></div>
+      <div>Wind {weatherData.wind.speed} mph</div>
+    </>
+  )
+}
+
 const SingleVerboseCountryInfo = ({ match }) => {
   return (
     <>
@@ -26,6 +59,8 @@ const SingleVerboseCountryInfo = ({ match }) => {
         {Object.values(match.languages).map(x => <li key={x}>{x}</li>)}
       </ul>
       <img src={match.flags.png} alt={match.flags.alt} />
+      <h2>Weather in {match.capital}</h2>
+      <SingleCountryWeatherData countryInfo={match} />
     </>
   )
 }
@@ -75,8 +110,6 @@ const App = () => {
       return []
     }
 
-    console.log(countryFilter)
-
     return countryData.filter(x => x.name.common.toUpperCase().includes(countryFilter.toUpperCase()))
   }
 
@@ -85,7 +118,6 @@ const App = () => {
   }
 
   useEffect(() => {
-    console.log(`useEffect`)
     countryService.getAll()
     .then(data => setCountryData(data))
   }, [])
