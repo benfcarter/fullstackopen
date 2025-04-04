@@ -88,6 +88,12 @@ const App = () => {
     .then(data => setCountryData(data))
   }, [])
 
+  if (countryData === null) {
+    return (
+      <div>Loading country data...</div>
+    )
+  }
+  
   return (
     <>
       <div><SearchBox value={countryFilter} onChange={onCountryFilterChange} /></div>
