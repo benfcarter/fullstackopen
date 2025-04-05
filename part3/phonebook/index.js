@@ -64,6 +64,19 @@ const generateId = () => {
 
 app.post('/api/persons', (request, response) => {
     const person = request.body
+
+    if(!person.name || !person.number) {
+        return response.status(400).json({
+            error: 'Phonebook entries must contain both a "name" and "number"'
+        })
+    }
+
+    if(persons.some(x => x.name.toUpperCase() === person.name.toUpperCase())) {
+        return response.status(400).json({
+            error: `There is already an phone book entry for ${person.name}`
+        })
+    }
+
     person.id = generateId()
     persons = persons.concat(person)
 

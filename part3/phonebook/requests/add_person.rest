@@ -8,3 +8,35 @@ content-type: application/json
     "name": "John Doe",
     "number": "867-5309"
 }
+
+###
+POST http://localhost:3001/api/persons HTTP/1.1
+content-type: application/json
+
+{}
+
+###
+POST http://localhost:3001/api/persons HTTP/1.1
+content-type: application/json
+
+{
+    "number": "123-4567"
+}
+
+###
+POST http://localhost:3001/api/persons HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Bad name",
+    "phone": "123456"
+}
+
+###
+POST http://localhost:3001/api/persons HTTP/1.1
+content-type: application/json
+
+{
+  "name": "Ada Lovelace",
+  "number": "1"
+}
