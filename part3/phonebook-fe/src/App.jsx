@@ -150,7 +150,7 @@ const App = () => {
       .remove(person.id)
       .then(data => {
         setPersons(persons.filter(x => x.id != person.id))
-        notify(`Removed entry for ${data.name}`, false)
+        notify(`Removed entry for ${person.name}`, false)
       })
       .catch(error =>
         notify(`Delete operation failed.  Error: ${error}`, true)
@@ -166,8 +166,6 @@ const App = () => {
       notify(`Could not fetch number data.  Error: ${error}`, true)
     )
   }, [])
-  
-  console.log(persons);
   
   return (
     <div>
