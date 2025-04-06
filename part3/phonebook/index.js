@@ -64,7 +64,6 @@ app.get('/api/info', (request, response) => {
 app.delete('/api/persons/:id', (request, response) => {
     const id = request.params.id
     persons = persons.filter(x => x.id !== id)
-
     response.status(204).end()
 })
 
@@ -74,7 +73,7 @@ const generateId = () => {
     ? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
     : 0
 
-    return nextId
+    return nextId.toString()
 }
 
 app.post('/api/persons', (request, response) => {
@@ -98,7 +97,7 @@ app.post('/api/persons', (request, response) => {
     response.json(person)
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
