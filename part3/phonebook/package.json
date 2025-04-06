@@ -12,10 +12,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "@powershell Remove-Item -Recurse -Force -ErrorAction SilentlyContinue dist && cd ../phonebook-fe && npm run build && @powershell Copy-Item dist -Recurse ../phonebook",
     "deploy": "fly deploy",
-    "deploy:full": "npm run build:ui && npm run deploy",    
-    "logs:prod": "fly logs"  },
+    "deploy:full": "npm run build:ui && npm run deploy",
+    "logs:prod": "fly logs"
+  },
   "dependencies": {
     "express": "^5.1.0",
+    "mongoose": "^8.13.2",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
