@@ -65,8 +65,11 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.get('/api/info', (request, response) => {
-
-    response.send(`<p>Phonebook has info for ${persons.length} ${persons.length === 1 ? "person" : "people"}</p><p>${Date()}</p>`)
+    Person.countDocuments()
+        .then(result => {
+            console.log(result)
+            response.send(`<p>Phonebook has info for ${result} ${result === 1 ? "person" : "people"}</p><p>${Date()}</p>`)
+        })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
