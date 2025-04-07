@@ -6,8 +6,8 @@ const morgan = require('morgan')
 
 const app = express()
 
-app.use(express.json())
 app.use(express.static('dist'))
+app.use(express.json())
 
 app.use(morgan(function (tokens, req, res) {
     return [
@@ -73,19 +73,11 @@ app.get('/api/info', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    persons = persons.filter(x => x.id !== id)
-    response.status(204).end()
+    Person.findByIdAndDelete(request.params.id.toString())
+        .then(result => {
+            response.status(204).end()
+        })
 })
-
-const generateId = () => {
-    const nextId = persons.length > 0
-    // ? Math.max(...persons.map(x => Number(x.id))) + 1
-    ? Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
-    : 0
-
-    return nextId.toString()
-}
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
