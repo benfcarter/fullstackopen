@@ -6,6 +6,10 @@ GET http://localhost:3001/api/persons
 ###
 GET http://localhost:3001/api/persons/67f2c4929e1b26f194b06ba6
 
+{
+    
+}
+
 
 ###
 POST https://phonebook-still-field-9277.fly.dev/api/persons HTTP/1.1
