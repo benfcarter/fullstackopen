@@ -114,10 +114,11 @@ app.put('/api/persons/:id', (request, response, next) => {
 
             person.name = body.name
             person.number = body.number
-            person.save()
+            person.save({ runValidators: true })
                 .then(savedPerson => {
                     response.json(savedPerson)
                 })
+                .catch(error => next(error))
         })
         .catch(error => next(error))
 })

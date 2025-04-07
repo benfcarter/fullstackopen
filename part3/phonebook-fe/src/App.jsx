@@ -122,7 +122,7 @@ const App = () => {
           notify(`Updated number for ${data.name}`, false)
         })
         .catch(error =>
-          notify(`Update operation failed.  Error: ${error}`, true)
+          notify(`Update operation failed.  Error: ${error.response.data.error}`, true)
         )
       }
     } else {
@@ -138,7 +138,6 @@ const App = () => {
         notify(`Created entry for ${data.name}`, false)
       })
       .catch(error => {
-        console.log(error.response.data)
         notify(`Create operation failed.  Error: ${error.response.data.error}`, true)
       })
     }

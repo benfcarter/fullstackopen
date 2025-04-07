@@ -13,12 +13,22 @@ mongoose.connect(dbUrl)
         console.log(`Error connecting to Mongo DB at ${dbUrl}: ${error.message}`)
     })
 
+const numberValidator = (v) => {
+    // Regex that represents two or three digits, followed by a hyphen, followed by a string of digits
+    return /^\d{2,3}-\d+$/.test(v)
+}
+
 const personSchema = new mongoose.Schema({
     name: {
         type: String,
         minLength: 3,
     },
-    number: String,
+    number: {
+        type: String,
+        validate: {
+            validator: numberValidator,
+        }
+    },
 })
 
 personSchema.set('toJSON', {
