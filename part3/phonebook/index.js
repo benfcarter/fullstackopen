@@ -44,18 +44,24 @@ let persons = [
 ]
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({})
+        .then(result => {
+            response.json(result)
+        })
+        .catch(error => {
+            console.log(`Error fetching person data: ${error.message}`)
+            response.status(404).end()
+        })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = request.params.id
-    const person = persons.find(x => x.id === id)
-
-    if(person) {
-        response.json(person)
-    } else {
-        response.status(404).send(`No person found with id ${id}`)
-    }
+    Person.findById(request.params.id.toString())
+        .then(person => {
+            response.json(person)
+        })
+        .catch(error => {
+            response.status(404).json({ error: `Could not find person with id ${request.params.id}`})
+        })
 })
 
 app.get('/api/info', (request, response) => {
