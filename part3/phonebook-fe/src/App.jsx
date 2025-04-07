@@ -137,9 +137,10 @@ const App = () => {
         setPersons(persons.concat(data))
         notify(`Created entry for ${data.name}`, false)
       })
-      .catch(error =>
-        notify(`Create operation failed.  Error: ${error}`, true)
-      )
+      .catch(error => {
+        console.log(error.response.data)
+        notify(`Create operation failed.  Error: ${error.response.data.error}`, true)
+      })
     }
   }
 
