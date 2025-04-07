@@ -97,6 +97,31 @@ app.post('/api/persons', (request, response, next) => {
         .catch(error => next(error))
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+
+    if(!body.name || !body.number) {
+        next(error)
+    }
+
+    const id = request.params.id.toString()
+
+    Person.findById(id)
+        .then(person => {
+            if(!person) {
+                return response.status(404).json(`Tried to update person with id ${id} but no person with that id exists`)
+            }
+
+            person.name = body.name
+            person.number = body.number
+            person.save()
+                .then(savedPerson => {
+                    response.json(savedPerson)
+                })
+        })
+        .catch(error => next(error))
+})
+
 const errorHandler = (error, request, response, next) => {
     console.error(error.message)
 

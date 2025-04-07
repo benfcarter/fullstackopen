@@ -30,6 +30,15 @@ content-type: application/json
 }
 
 ###
+PUT http://localhost:3001/api/persons/67f34edf7c937f51e57 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Jane Doe",
+    "number": "123-4567"
+}
+
+###
 POST https://phonebook-still-field-9277.fly.dev/api/persons HTTP/1.1
 content-type: application/json
 
