@@ -88,24 +88,28 @@ const generateId = () => {
 }
 
 app.post('/api/persons', (request, response) => {
-    const person = request.body
+    const body = request.body
 
-    if(!person.name || !person.number) {
+    if(!body.name || !body.number) {
         return response.status(400).json({
             error: 'Phonebook entries must contain both a "name" and "number"'
         })
     }
 
-    if(persons.some(x => x.name.toUpperCase() === person.name.toUpperCase())) {
-        return response.status(400).json({
-            error: `There is already an phone book entry for ${person.name}`
+    const person = new Person({
+        name: body.name,
+        number: body.number
+    })
+
+    person.save()
+        .then(savedPerson => {
+            response.json(savedPerson)
         })
-    }
-
-    person.id = generateId()
-    persons = persons.concat(person)
-
-    response.json(person)
+        .catch(error => {
+            response.status(409).json({
+                error: `Error adding person to DB: ${error.message}`
+            })
+        })
 })
 
 const PORT = process.env.PORT || 3001
