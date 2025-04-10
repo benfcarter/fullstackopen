@@ -1,5 +1,6 @@
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
+
 const listHelper = require('../utils/list_helper')
 
 const testBlogs = [
@@ -75,7 +76,6 @@ describe('total likes', () => {
     assert.strictEqual(result, 7)
   })
 
-
   test('of a bigger list is calculated right', () => {
     const blogs = testBlogs
 
@@ -99,7 +99,6 @@ describe('favorite blog', () => {
     assert.deepStrictEqual(result, testBlogs[0])
   })
 
-
   test('from a bigger list is calculated right', () => {
     const blogs = testBlogs
 
@@ -109,9 +108,59 @@ describe('favorite blog', () => {
 })
 
 describe('most blogs', () => {
+  test('from empty list is null', () => {
+    const blogs = []
 
+    const result = listHelper.mostBlogs(blogs)
+    assert.strictEqual(result, null)
+  })
+
+  test('from list of only one blog is that blog\'s author', () => {
+    const blogs = [testBlogs[0]]
+
+    const result = listHelper.mostBlogs(blogs)
+    assert.deepStrictEqual(result, {
+      author: "Michael Chan",
+      blogs: 1
+    })
+  })
+
+  test('from a bigger list is calculated right', () => {
+    const blogs = testBlogs
+
+    const result = listHelper.mostBlogs(blogs)
+    assert.deepStrictEqual(result, {
+      author: "Robert C. Martin",
+      blogs: 3
+    })
+  })
 })
 
 describe('most likes', () => {
-  
+  test('from empty list is null', () => {
+    const blogs = []
+
+    const result = listHelper.mostLikes(blogs)
+    assert.strictEqual(result, null)
+  })
+
+  test('from list of only one blog is that blog\'s author', () => {
+    const blogs = [testBlogs[0]]
+
+    const result = listHelper.mostLikes(blogs)
+    assert.deepStrictEqual(result, {
+      author: "Michael Chan",
+      likes: 7
+    })
+  })
+
+  test('from a bigger list is calculated right', () => {
+    const blogs = testBlogs
+
+    const result = listHelper.mostLikes(blogs)
+    assert.deepStrictEqual(result, {
+      author: "Edsger W. Dijkstra",
+      likes: 17
+    })
+  })
 })
