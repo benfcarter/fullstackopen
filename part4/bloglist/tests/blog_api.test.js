@@ -15,9 +15,19 @@ test('blogs are returned as json', async () => {
 
 test('there is one blog', async () => {
   const response = await api.get('/api/blogs')
-  console.log(response.body)
-
   assert.strictEqual(response.body.length, 1)
+})
+
+test('blog entries do not have _id', async () => {
+  const response = await api.get('/api/blogs')
+  const blog = response.body[0]
+  assert(!blog.hasOwnProperty('_id'))
+})
+
+test('blog entries have id', async () => {
+  const response = await api.get('/api/blogs')
+  const blog = response.body[0]
+  assert(blog.hasOwnProperty('id'))
 })
 
 after(async () => {
