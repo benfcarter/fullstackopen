@@ -100,6 +100,25 @@ test('a valid blog can be added', async () => {
   assert(titles.includes(newBlog.title))
 })
 
+test('likes defaults to zero if unspecified', async () => {
+  const newBlog = {
+    title: "No one should like this blog",
+    author: "Ben Carter",
+    url: "https://google.com"
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  const addedBlog = response.body.find(blog => blog.title === 'No one should like this blog')
+
+  assert.strictEqual(addedBlog.likes, 0)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
