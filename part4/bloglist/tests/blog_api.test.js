@@ -49,10 +49,9 @@ const testBlogs = [
 beforeEach(async () => {
   await Blog.deleteMany({})
   
-  for(const blog of testBlogs) {
-    const blogObject = new Blog(blog)
-    await blogObject.save()
-  }
+  const blogObjects = testBlogs.map(blog => new Blog(blog))
+  const promiseArray = blogObjects.map(blogObject => blogObject.save())
+  await Promise.all(promiseArray)
 })
 
 test('blogs are returned as json', async () => {
