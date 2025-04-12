@@ -119,6 +119,32 @@ test('likes defaults to zero if unspecified', async () => {
   assert.strictEqual(addedBlog.likes, 0)
 })
 
+test('missing title results in bad request error', async () => {
+  const newBlog = {
+    author: "Ben Carter",
+    url: "https://google.com",
+    likes: 100
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
+test('missing url results in bad request error', async () => {
+  const newBlog = {
+    title: "This blog doesn't exist",
+    author: "Ben Carter",
+    likes: 100
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
