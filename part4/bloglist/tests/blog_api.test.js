@@ -110,6 +110,22 @@ describe('when there are some blogs saved already', () => {
         .expect(400)
     })
   })
+
+  describe('deleting a blog post', () => {
+    test('existing post is deleted properly', async () => {
+      const response = await api.get('/api/blogs')
+      const id = response.body[0].id
+
+      await api
+        .delete(`/api/blogs/${id}`)
+        .expect(200)
+
+      const responseAfterDelete = await api.get('/api/blogs')
+
+      assert.strictEqual(responseAfterDelete.body.length, helper.testBlogs.length - 1)
+      assert(!responseAfterDelete.find(blog => blog.id === id))
+    })
+  })
 })
 
 after(async () => {
