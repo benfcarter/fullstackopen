@@ -118,12 +118,12 @@ describe('when there are some blogs saved already', () => {
 
       await api
         .delete(`/api/blogs/${id}`)
-        .expect(200)
+        .expect(204)
 
       const responseAfterDelete = await api.get('/api/blogs')
 
       assert.strictEqual(responseAfterDelete.body.length, helper.testBlogs.length - 1)
-      assert(!responseAfterDelete.find(blog => blog.id === id))
+      assert(!responseAfterDelete.body.find(blog => blog.id === id))
     })
   })
 })
