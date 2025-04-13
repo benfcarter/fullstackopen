@@ -148,6 +148,20 @@ describe('when there are some blogs saved already', () => {
 
       assert.strictEqual(secondGetResponse.length, getResponse.length)
     })
+
+    test('try to update a blog that does not exist', async () => {
+      const newBlog = {
+        title: "Bad update",
+        author: "Doesn't matter",
+        url: "Also doesn't matter",
+        likes: 10000
+      }
+
+      await api
+        .put('/api/blogs/badbadbadbadbadbadbadbad')
+        .send(newBlog)
+        .expect(404)
+    })
   })
 })
 
