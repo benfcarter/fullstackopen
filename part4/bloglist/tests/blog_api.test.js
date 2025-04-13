@@ -33,22 +33,22 @@ describe('when there are some blogs saved already', () => {
     test('blog entries do not have _id', async () => {
       const response = await api.get('/api/blogs')
       const blog = response.body[0]
-      assert(!blog.hasOwnProperty('_id'))
+      assert(!Object.prototype.hasOwnProperty.call(blog, '_id'))
     })
 
     test('blog entries have id', async () => {
       const response = await api.get('/api/blogs')
       const blog = response.body[0]
-      assert(blog.hasOwnProperty('id'))
+      assert(Object.prototype.hasOwnProperty.call(blog, 'id'))
     })
   })
 
   describe('adding a new blog', () => {
     test('a valid blog can be added', async () => {
       const newBlog = {
-        title: "Test blog",
-        author: "Ben Carter",
-        url: "https://google.com",
+        title: 'Test blog',
+        author: 'Ben Carter',
+        url: 'https://google.com',
         likes: 200
       }
   
@@ -67,9 +67,9 @@ describe('when there are some blogs saved already', () => {
   
     test('likes defaults to zero if unspecified', async () => {
       const newBlog = {
-        title: "No one should like this blog",
-        author: "Ben Carter",
-        url: "https://google.com"
+        title: 'No one should like this blog',
+        author: 'Ben Carter',
+        url: 'https://google.com'
       }
   
       await api
@@ -86,8 +86,8 @@ describe('when there are some blogs saved already', () => {
   
     test('missing title results in bad request error', async () => {
       const newBlog = {
-        author: "Ben Carter",
-        url: "https://google.com",
+        author: 'Ben Carter',
+        url: 'https://google.com',
         likes: 100
       }
   
@@ -99,8 +99,8 @@ describe('when there are some blogs saved already', () => {
   
     test('missing url results in bad request error', async () => {
       const newBlog = {
-        title: "This blog doesn't exist",
-        author: "Ben Carter",
+        title: 'This blog doesn\'t exist',
+        author: 'Ben Carter',
         likes: 100
       }
   

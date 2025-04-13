@@ -4,13 +4,6 @@ const helper = require('./test_helper')
 
 const listHelper = require('../utils/list_helper')
 
-test('dummy returns one', () => {
-  const blogs = []
-
-  const result = listHelper.dummy(blogs)
-  assert.strictEqual(result, 1)
-})
-
 describe('total likes', () => {
   test('of empty list is zero', () => {
     const blogs = []
@@ -70,7 +63,7 @@ describe('most blogs', () => {
 
     const result = listHelper.mostBlogs(blogs)
     assert.deepStrictEqual(result, {
-      author: "Michael Chan",
+      author: 'Michael Chan',
       blogs: 1
     })
   })
@@ -80,7 +73,7 @@ describe('most blogs', () => {
 
     const result = listHelper.mostBlogs(blogs)
     assert.deepStrictEqual(result, {
-      author: "Robert C. Martin",
+      author: 'Robert C. Martin',
       blogs: 3
     })
   })
@@ -99,7 +92,7 @@ describe('most likes', () => {
 
     const result = listHelper.mostLikes(blogs)
     assert.deepStrictEqual(result, {
-      author: "Michael Chan",
+      author: 'Michael Chan',
       likes: 7
     })
   })
@@ -109,7 +102,7 @@ describe('most likes', () => {
 
     const result = listHelper.mostLikes(blogs)
     assert.deepStrictEqual(result, {
-      author: "Edsger W. Dijkstra",
+      author: 'Edsger W. Dijkstra',
       likes: 17
     })
   })

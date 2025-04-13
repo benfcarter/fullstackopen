@@ -12,7 +12,7 @@ blogsRouter.post('/', async (request, response) => {
     likes: request.body.likes || 0,
   }
 
-  if(!body.hasOwnProperty('title') || !body.hasOwnProperty('url')) {
+  if(!Object.prototype.hasOwnProperty.call(body, 'title') || !Object.prototype.hasOwnProperty.call(body, 'url')) {
     response.status(400).end()
   }
 
