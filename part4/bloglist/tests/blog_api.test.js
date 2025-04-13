@@ -126,6 +126,29 @@ describe('when there are some blogs saved already', () => {
       assert(!responseAfterDelete.body.find(blog => blog.id === id))
     })
   })
+
+  describe('updating a blog post', () => {
+    test('post is changed appropriately with valid data', async () => {
+      const getResponse = await api.get('/api/blogs')
+      const id = getResponse.body[1].id
+
+      const newBlog = {
+        ...getResponse.body[1],
+        likes: 10000
+      }
+
+      const putResponse = await api
+        .put(`/api/blogs/${id}`)
+        .send(newBlog)
+        .expect(200)
+
+      assert.deepStrictEqual(putResponse.body, newBlog)
+
+      const secondGetResponse = await api.get('/api/blogs')
+
+      assert.strictEqual(secondGetResponse.length, getResponse.length)
+    })
+  })
 })
 
 after(async () => {
