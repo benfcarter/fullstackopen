@@ -1,10 +1,12 @@
 const { test, after, beforeEach, describe } = require('node:test')
+const bcrypt = require('bcryptjs')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const assert = require('node:assert')
 const helper = require('./test_helper')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const api = supertest(app)
 
@@ -15,6 +17,14 @@ describe('when there are some blogs saved already', () => {
     const blogObjects = helper.testBlogs.map(blog => new Blog(blog))
     const promiseArray = blogObjects.map(blogObject => blogObject.save())
     await Promise.all(promiseArray)
+
+    await User.deleteMany({})
+
+    const salt = await bcrypt.genSalt(10)
+    const passwordHash = await bcrypt.hash('sekret', salt)
+    const user = new User({ username: 'root', passwordHash: passwordHash, name: "Bob"})
+
+    await user.save()
   })
 
   describe('general blog structure and behavior', () => {
@@ -108,6 +118,45 @@ describe('when there are some blogs saved already', () => {
         .post('/api/blogs')
         .send(newBlog)
         .expect(400)
+    })
+
+    test('new blogs contian creator info', async () => {
+      const users = await api.get('/api/users')
+      const user = users.body[0]
+      const userId = user.id
+
+      const newBlog = {
+        title: 'Test blog',
+        author: 'Ben Carter',
+        url: 'https://google.com',
+        likes: 200,
+        userId: userId,
+      }
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+
+      const blogsAfter = await api.get('/api/blogs')
+      const blogAfter = blogsAfter.body.find(blog => blog.title === 'Test blog')
+      assert.deepStrictEqual(blogAfter.user, {
+        username: user.username,
+        name: user.name,
+        id: user.id,
+      })
+
+      const usersAfter = await api.get('/api/users')
+      const userAfter = usersAfter.body[0]
+      assert.deepStrictEqual(userAfter.blogs, [
+        {
+          title: newBlog.title,
+          author: newBlog.author,
+          url: newBlog.url,
+          likes: newBlog.likes,
+          id: blogAfter.id
+        }
+      ])
     })
   })
 
