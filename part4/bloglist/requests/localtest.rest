@@ -14,11 +14,30 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "root2",
+  "password": "sekret",
+  "name": "Bob2"
+}
+
+###
 POST http://localhost:3003/api/login
 Content-Type: application/json
 
 {
   "username": "root",
+  "password": "sekret"
+}
+
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username": "root2",
   "password": "sekret"
 }
 
@@ -34,7 +53,7 @@ Content-Type: application/json
 ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY3ZmM2ZTgzZmM0YzU0MzBjYzA5YzRiZiIsImlhdCI6MTc0NDU5NzYwMH0.2AAMd_PhVCtT3ebWS89o6gzlZlUAKJT8QkRpynmwSww
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QyIiwiaWQiOiI2N2ZjNzRiNDgzNDA5ZmQwZGQwM2Y5NDAiLCJpYXQiOjE3NDQ1OTgyMTB9.MrTe0vTsLsF0qYS0VAjaupiiBOexq8aWfqaTC6hHfkw
 
 {
   "title": "My first blog post",
@@ -44,4 +63,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb
 }
 
 ###
-DELETE http://localhost:3003/api/blogs/67fc72a75a0f53ee1bb2dc81
+DELETE http://localhost:3003/api/blogs/67fc75d8e27430a528fe334e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QyIiwiaWQiOiI2N2ZjNzRiNDgzNDA5ZmQwZGQwM2Y5NDAiLCJpYXQiOjE3NDQ1OTgyMTB9.MrTe0vTsLsF0qYS0VAjaupiiBOexq8aWfqaTC6hHfkw
