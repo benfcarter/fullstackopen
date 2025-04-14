@@ -1,6 +1,34 @@
 GET http://localhost:3003/api/blogs
 
 ###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "sekret",
+  "name": "Bob"
+}
+
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "sekret"
+}
+
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "password"
+}
+
+###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
