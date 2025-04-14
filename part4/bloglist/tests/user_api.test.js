@@ -3,7 +3,6 @@ const bcryptjs = require('bcryptjs')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const assert = require('node:assert')
-const helper = require('./test_helper')
 const app = require('../app')
 const User = require('../models/user')
 
@@ -14,7 +13,7 @@ describe('when there are some users saved already', () => {
     await User.deleteMany({})
 
     const passwordHash = await bcryptjs.hash('sekret', 10)
-    const user = new User({ username: 'root', passwordHash: passwordHash, name: "Bob"})
+    const user = new User({ username: 'root', passwordHash: passwordHash, name: 'Bob'})
 
     await user.save()
   })

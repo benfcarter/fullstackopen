@@ -22,7 +22,7 @@ describe('when there are some blogs saved already', () => {
 
     const salt = await bcrypt.genSalt(10)
     const passwordHash = await bcrypt.hash('sekret', salt)
-    const user = new User({ username: 'root', passwordHash: passwordHash, name: "Bob"})
+    const user = new User({ username: 'root', passwordHash: passwordHash, name: 'Bob'})
 
     await user.save()
   })
@@ -200,9 +200,9 @@ describe('when there are some blogs saved already', () => {
 
     test('try to update a blog that does not exist', async () => {
       const newBlog = {
-        title: "Bad update",
-        author: "Doesn't matter",
-        url: "Also doesn't matter",
+        title: 'Bad update',
+        author: 'Doesn\'t matter',
+        url: 'Also doesn\'t matter',
         likes: 10000
       }
 
