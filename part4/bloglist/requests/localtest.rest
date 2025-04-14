@@ -34,7 +34,7 @@ Content-Type: application/json
 ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY3ZmM2YjcyY2ZjMTc2NzcxYmE1NjU3MyIsImlhdCI6MTc0NDU5NjgwM30.FpAiEnvzv8a0kbFDTc7NJ82rk3sXrzIb9gcetzQGyp8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY3ZmM2ZTgzZmM0YzU0MzBjYzA5YzRiZiIsImlhdCI6MTc0NDU5NzYwMH0.2AAMd_PhVCtT3ebWS89o6gzlZlUAKJT8QkRpynmwSww
 
 {
   "title": "My first blog post",
