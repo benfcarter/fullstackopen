@@ -1,3 +1,4 @@
+
 const testBlogs = [
   {
     title: 'React patterns',
@@ -37,4 +38,17 @@ const testBlogs = [
   }  
 ]
 
-module.exports = { testBlogs }
+const getAuthToken = async (api) => {
+  const loginInfo = {
+    username: 'root',
+    password: 'sekret'
+  }
+
+  const loginResponse = await api
+    .post('/api/login')
+    .send(loginInfo)
+
+  return loginResponse.body.token
+}
+
+module.exports = { testBlogs, getAuthToken }

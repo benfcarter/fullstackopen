@@ -23,4 +23,14 @@ const userExtractor = async (request, response, next) => {
   next()
 }
 
-module.exports = { tokenExtractor, userExtractor }
+const errorHandler = async (error, request, response, next) => {
+  if(error.name === 'JsonWebTokenError') {
+    return response.status(401).json({
+      error: 'invalid token'
+    })
+  }
+
+  next(error)
+}
+
+module.exports = { tokenExtractor, userExtractor, errorHandler }

@@ -12,12 +12,6 @@ const api = supertest(app)
 
 describe('when there are some blogs saved already', () => {
   beforeEach(async () => {
-    await Blog.deleteMany({})
-    
-    const blogObjects = helper.testBlogs.map(blog => new Blog(blog))
-    const promiseArray = blogObjects.map(blogObject => blogObject.save())
-    await Promise.all(promiseArray)
-
     await User.deleteMany({})
 
     const salt = await bcrypt.genSalt(10)
@@ -25,6 +19,12 @@ describe('when there are some blogs saved already', () => {
     const user = new User({ username: 'root', passwordHash: passwordHash, name: 'Bob'})
 
     await user.save()
+
+    await Blog.deleteMany({})
+    
+    const blogObjects = helper.testBlogs.map(blog => new Blog({...blog, user: user.id}))
+    const promiseArray = blogObjects.map(blogObject => blogObject.save())
+    await Promise.all(promiseArray)
   })
 
   describe('general blog structure and behavior', () => {
@@ -61,9 +61,12 @@ describe('when there are some blogs saved already', () => {
         url: 'https://google.com',
         likes: 200
       }
-  
+
+      const token = await helper.getAuthToken(api)
+
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -74,6 +77,20 @@ describe('when there are some blogs saved already', () => {
       assert.strictEqual(titles.length, helper.testBlogs.length + 1)
       assert(titles.includes(newBlog.title))
     })
+
+    test('fails if no token provided', async () => {
+      const newBlog = {
+        title: 'Test blog',
+        author: 'Ben Carter',
+        url: 'https://google.com',
+        likes: 200
+      }
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+    })
   
     test('likes defaults to zero if unspecified', async () => {
       const newBlog = {
@@ -82,8 +99,11 @@ describe('when there are some blogs saved already', () => {
         url: 'https://google.com'
       }
   
+      const token = await helper.getAuthToken(api)
+
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -101,8 +121,11 @@ describe('when there are some blogs saved already', () => {
         likes: 100
       }
   
+      const token = await helper.getAuthToken(api)
+
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(400)
     })
@@ -114,8 +137,11 @@ describe('when there are some blogs saved already', () => {
         likes: 100
       }
   
+      const token = await helper.getAuthToken(api)
+
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(400)
     })
@@ -133,8 +159,11 @@ describe('when there are some blogs saved already', () => {
         userId: userId,
       }
 
+      const token = await helper.getAuthToken(api)
+
       await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
 
@@ -165,8 +194,11 @@ describe('when there are some blogs saved already', () => {
       const response = await api.get('/api/blogs')
       const id = response.body[0].id
 
+      const token = await helper.getAuthToken(api)
+
       await api
         .delete(`/api/blogs/${id}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(204)
 
       const responseAfterDelete = await api.get('/api/blogs')
@@ -191,9 +223,9 @@ describe('when there are some blogs saved already', () => {
         .send(newBlog)
         .expect(200)
 
-      assert.deepStrictEqual(putResponse.body, newBlog)
-
       const secondGetResponse = await api.get('/api/blogs')
+      const updatedBlog = secondGetResponse.body.find(blog => blog.title === newBlog.title)
+      assert.deepStrictEqual(updatedBlog, newBlog)
 
       assert.strictEqual(secondGetResponse.length, getResponse.length)
     })
@@ -215,5 +247,7 @@ describe('when there are some blogs saved already', () => {
 })
 
 after(async () => {
+  await User.deleteMany({})
+  await Blog.deleteMany({})
   await mongoose.connection.close()
 })

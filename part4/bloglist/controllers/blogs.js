@@ -44,7 +44,7 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) =
     return response.status(401).json({ error: 'only the user that submitted the blog may delete it' })
   }
 
-  await Blog.findOneAndDelete({ id: request.params.id })
+  const deletedBlog = await blog.deleteOne()
   response.status(204).end()
 })
 
