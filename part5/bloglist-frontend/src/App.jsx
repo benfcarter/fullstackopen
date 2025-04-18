@@ -29,7 +29,7 @@ const Notification = ({ notification }) => {
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -53,12 +53,12 @@ const App = () => {
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
 
     } catch (exception) {
-      setErrorMessage({
-        message: 'Wrong credentials',
+      setNotification({
+        message: 'wrong username or password',
         isError: true,
       })
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -78,14 +78,21 @@ const App = () => {
       blogService.create(newBlog)
         .then((data) =>{
           setBlogs(blogs.concat(data))
+          setNotification({
+            message: `a new blog ${data.title} by ${data.author} added`,
+            isError: false
+          })
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
         })
     } catch(Exception) {
-      setErrorMessage({
+      setNotification({
         message: `Error creating blog: ${error.message}`,
         isError: true,
       })
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification(null)
       }, 5000)
     }
   }
@@ -108,7 +115,7 @@ const App = () => {
   if(user === null) {
     return (
       <div>
-        <Notification notification={errorMessage} />
+        <Notification notification={notification} />
         <h2>log in to application</h2>
 
         <form onSubmit={handleLogin}>
@@ -128,6 +135,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification notification={notification} />
       <h2>blogs</h2>
       <p>
         Logged in as {user.username}
