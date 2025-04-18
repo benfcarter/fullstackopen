@@ -63,7 +63,7 @@ const App = () => {
     }
   }
 
-  const handleLogout = (event) => {
+  const handleLogout = () => {
     setUser(null)
     blogService.setToken(null)
     window.localStorage.removeItem('loggedBlogAppUser')
@@ -86,9 +86,9 @@ const App = () => {
             setNotification(null)
           }, 5000)
         })
-    } catch(Exception) {
+    } catch(exception) {
       setNotification({
-        message: `Error creating blog: ${error.message}`,
+        message: `Error creating blog: ${exception.message}`,
         isError: true,
       })
       setTimeout(() => {
