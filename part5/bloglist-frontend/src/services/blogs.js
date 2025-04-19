@@ -22,7 +22,7 @@ const create = async (newBlog) => {
 }
 
 const replace = (updatedBlog) => {
-  const response = axios.put(`baseUrl/${updatedBlog.id}`, updatedBlog)
+  const response = axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog)
   return response
 }
 

@@ -23,8 +23,8 @@ const Blog = ({ blog, replaceBlog }) => {
       ...blog,
       likes: blog.likes + 1,
     }
-    console.log(blog)
-    console.log(updatedBlog)
+    
+    blog.likes++
 
     replaceBlog(updatedBlog)
   }

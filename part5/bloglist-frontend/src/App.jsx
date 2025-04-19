@@ -74,12 +74,9 @@ const App = () => {
   }
 
   const replaceBlog = (updatedBlog) => {
-    console.log(`Replacing ${updatedBlog.title}`)
-
     try {
       blogService.replace(updatedBlog)
         .then((data) => {
-          console.log(data)
           setBlogs(blogs.map(blog => blog.id === data.id ? data : blog))
         })
     } catch(exception) {
