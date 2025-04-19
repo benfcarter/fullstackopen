@@ -18,6 +18,10 @@ const Blog = ({ blog }) => {
   const showDetailsStyle = { display: showDetails ? '' : 'none' }
   const hideDetailsStyle = { display: showDetails ? 'none' : '' }
 
+  const handleLike = (event) => {
+
+  }
+
   console.log(blog)
   return (
     <div style={blogStyle}>
@@ -25,7 +29,7 @@ const Blog = ({ blog }) => {
       <button onClick={toggleDetails}>{showDetails ? 'hide' : 'show'}</button>
       <div style={showDetailsStyle}>
         <div>{blog.url}</div>
-        <div>{blog.likes}</div>
+        <div>{blog.likes}<button onClick={handleLike}>like</button></div>
         <div>{blog.user.name}</div>
       </div>
     </div>  
