@@ -48,11 +48,10 @@ const App = () => {
   }
 
   const createBlog = (newBlog) => {
-    event.preventDefault()
-
     try {
       blogService.create(newBlog)
         .then((data) =>{
+          console.log(data)
           blogFormRef.current.toggleVisibility()
           setBlogs(blogs.concat(data))
           setNotification({
@@ -72,6 +71,26 @@ const App = () => {
         setNotification(null)
       }, 5000)
     }
+  }
+
+  const replaceBlog = (updatedBlog) => {
+    console.log(`Replacing ${updatedBlog.title}`)
+
+    try {
+      blogService.replace(updatedBlog)
+        .then((data) => {
+          console.log(data)
+          setBlogs(blogs.map(blog => blog.id === data.id ? data : blog))
+        })
+    } catch(exception) {
+      setNotification({
+        message: `Error adding like: ${exception.message}`,
+        isError: true
+      })
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } 
   }
 
   useEffect(() => {
@@ -123,7 +142,7 @@ const App = () => {
         <CreateBlogForm createBlog={createBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} replaceBlog={replaceBlog} />
       )}
     </div>
   )

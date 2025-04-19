@@ -6,6 +6,7 @@ const CreateBlogForm = ({ createBlog }) => {
   const [url, setUrl] = useState('')
 
   const handleCreate = (event) => {
+    event.preventDefault()
     const newBlog = { title, author, url }
     createBlog(newBlog)
   }

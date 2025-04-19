@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, replaceBlog }) => {
   const [showDetails, setShowDetails] = useState(false)
 
   const toggleDetails = () => {
@@ -19,10 +19,16 @@ const Blog = ({ blog }) => {
   const hideDetailsStyle = { display: showDetails ? 'none' : '' }
 
   const handleLike = (event) => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+    }
+    console.log(blog)
+    console.log(updatedBlog)
 
+    replaceBlog(updatedBlog)
   }
 
-  console.log(blog)
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author}
