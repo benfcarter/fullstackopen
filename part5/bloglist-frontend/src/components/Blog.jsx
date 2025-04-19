@@ -29,7 +29,7 @@ const Blog = ({ blog }) => {
       <button onClick={toggleDetails}>{showDetails ? 'hide' : 'show'}</button>
       <div style={showDetailsStyle}>
         <div>{blog.url}</div>
-        <div>{blog.likes}<button onClick={handleLike}>like</button></div>
+        <div>likes {blog.likes} <button onClick={handleLike}>like</button></div>
         <div>{blog.user.name}</div>
       </div>
     </div>  
