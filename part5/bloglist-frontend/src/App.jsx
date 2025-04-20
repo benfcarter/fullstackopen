@@ -15,6 +15,13 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  const showNotification = (message, isError) => {
+    setNotification({ message, isError })
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     
@@ -31,13 +38,7 @@ const App = () => {
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
 
     } catch (exception) {
-      setNotification({
-        message: 'wrong username or password',
-        isError: true,
-      })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      showNotification(`wrong username or password`, true)
     }
   }
 
@@ -58,22 +59,10 @@ const App = () => {
           console.log(data)
           blogFormRef.current.toggleVisibility()
           updateBlogList(blogs.concat(data))
-          setNotification({
-            message: `a new blog ${data.title} by ${data.author} added`,
-            isError: false
-          })
-          setTimeout(() => {
-            setNotification(null)
-          }, 5000)
+          showNotification(`a new blog ${data.title} by ${data.author} added`, false)
         })
     } catch(exception) {
-      setNotification({
-        message: `Error creating blog: ${exception.message}`,
-        isError: true,
-      })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      showNotification(`Error creating blog: ${exception.message}`, true)
     }
   }
 
@@ -84,19 +73,18 @@ const App = () => {
           updateBlogList(blogs.map(blog => blog.id === data.id ? data : blog))
         })
     } catch(exception) {
-      setNotification({
-        message: `Error adding like: ${exception.message}`,
-        isError: true
-      })
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
+      showNotification(`Error adding like: ${exception.message}`, true)
     } 
   }
 
   const removeBlog = (blogToRemove) => {
-    blogService.remove(blogToRemove)
-    updateBlogList(blogs.filter(blog => blog.id !== blogToRemove.id))
+    try {
+      blogService.remove(blogToRemove)
+      updateBlogList(blogs.filter(blog => blog.id !== blogToRemove.id))
+      showNotification(`Removed ${blogToRemove.title}`, false)
+    } catch(exception) {
+      showNotification(`Error removing blog: ${exception.message}`, true)
+    }
   }
 
   useEffect(() => {
