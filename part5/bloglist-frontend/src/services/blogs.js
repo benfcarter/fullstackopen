@@ -26,4 +26,8 @@ const replace = (updatedBlog) => {
   return response
 }
 
-export default { getAll, setToken, create, replace }
+const remove = (blogToRemove) => {
+  console.log(`Removing blog ${blogToRemove.title}`)
+}
+
+export default { getAll, setToken, create, replace, remove }

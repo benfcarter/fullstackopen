@@ -47,13 +47,17 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
   }
 
+  const updateBlogList = (blogs) => {
+    setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+  }
+
   const createBlog = (newBlog) => {
     try {
       blogService.create(newBlog)
         .then((data) =>{
           console.log(data)
           blogFormRef.current.toggleVisibility()
-          setBlogs(blogs.concat(data))
+          updateBlogList(blogs.concat(data))
           setNotification({
             message: `a new blog ${data.title} by ${data.author} added`,
             isError: false
@@ -77,7 +81,7 @@ const App = () => {
     try {
       blogService.replace(updatedBlog)
         .then((data) => {
-          setBlogs(blogs.map(blog => blog.id === data.id ? data : blog))
+          updateBlogList(blogs.map(blog => blog.id === data.id ? data : blog))
         })
     } catch(exception) {
       setNotification({
@@ -90,12 +94,16 @@ const App = () => {
     } 
   }
 
+  const removeBlog = (blogToRemove) => {
+    blogService.remove(blogToRemove)
+    updateBlogList(blogs.filter(blog => blog.id !== blogToRemove.id))
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs => {
-      blogs.sort((a, b) => b.likes - a.likes)
-      setBlogs( blogs )
+      updateBlogList( blogs )
     })  
-  }, [blogs])
+  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -140,7 +148,7 @@ const App = () => {
         <CreateBlogForm createBlog={createBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} replaceBlog={replaceBlog} />
+        <Blog key={blog.id} blog={blog} replaceBlog={replaceBlog} removeBlog={removeBlog} />
       )}
     </div>
   )
