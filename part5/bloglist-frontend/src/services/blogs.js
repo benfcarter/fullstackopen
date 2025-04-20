@@ -28,6 +28,12 @@ const replace = (updatedBlog) => {
 
 const remove = (blogToRemove) => {
   console.log(`Removing blog ${blogToRemove.title}`)
+  const config = {
+    headers: { Authorization: token }
+  }
+
+  const response = axios.delete(`${baseUrl}/${blogToRemove.id}`, config)
+  return response
 }
 
 export default { getAll, setToken, create, replace, remove }
