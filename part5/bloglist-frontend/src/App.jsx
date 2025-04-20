@@ -24,7 +24,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try {
       const user = await loginService.login({
         username,
@@ -38,7 +38,7 @@ const App = () => {
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
 
     } catch (exception) {
-      showNotification(`wrong username or password`, true)
+      showNotification('wrong username or password', true)
     }
   }
 
@@ -55,7 +55,7 @@ const App = () => {
   const createBlog = (newBlog) => {
     try {
       blogService.create(newBlog)
-        .then((data) =>{
+        .then((data) => {
           console.log(data)
           blogFormRef.current.toggleVisibility()
           updateBlogList(blogs.concat(data))
@@ -74,7 +74,7 @@ const App = () => {
         })
     } catch(exception) {
       showNotification(`Error adding like: ${exception.message}`, true)
-    } 
+    }
   }
 
   const removeBlog = (blogToRemove) => {
@@ -92,7 +92,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs => {
       updateBlogList( blogs )
-    })  
+    })
   }, [])
 
   useEffect(() => {

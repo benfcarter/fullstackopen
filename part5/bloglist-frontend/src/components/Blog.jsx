@@ -24,7 +24,7 @@ const Blog = ({ blog, replaceBlog, removeBlog }) => {
       ...blog,
       likes: blog.likes + 1,
     }
-    
+
     blog.likes++
 
     replaceBlog(updatedBlog)
@@ -44,7 +44,7 @@ const Blog = ({ blog, replaceBlog, removeBlog }) => {
         <div>{blog.user.name}</div>
         <div><button onClick={handleRemove}>remove</button></div>
       </div>
-    </div>  
+    </div>
   )
 }
 
