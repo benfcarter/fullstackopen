@@ -37,7 +37,7 @@ const Blog = ({ blog, replaceBlog, removeBlog }) => {
   return (
     <div style={blogStyle} className='titleAuthor'>
       {blog.title} {blog.author}
-      <button onClick={toggleDetails}>{showDetails ? 'hide' : 'show'}</button>
+      <button onClick={toggleDetails} className='showButton'>{showDetails ? 'hide' : 'show'}</button>
       <div style={showDetailsStyle} className='details'>
         <div className='url'>{blog.url}</div>
         <div className='likes'>likes {blog.likes} <button onClick={handleLike}>like</button></div>
