@@ -40,7 +40,7 @@ const Blog = ({ blog, replaceBlog, removeBlog }) => {
       <button onClick={toggleDetails} className='showButton'>{showDetails ? 'hide' : 'show'}</button>
       <div style={showDetailsStyle} className='details'>
         <div className='url'>{blog.url}</div>
-        <div className='likes'>likes {blog.likes} <button onClick={handleLike}>like</button></div>
+        <div className='likes'>likes {blog.likes} <button onClick={handleLike} className='likeButton'>like</button></div>
         <div className='name'>{blog.user.name}</div>
         <div><button onClick={handleRemove}>remove</button></div>
       </div>

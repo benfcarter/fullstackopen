@@ -45,3 +45,30 @@ test('details render when show button clicked', async () => {
   expect(details).not.toHaveStyle('display: none')
 
 })
+
+test('like button triggers function', async () => {
+  const blog = {
+    title: 'Test Title',
+    author: 'Test Author',
+    url: 'google',
+    likes: 1000,
+    user: {
+      name: 'Me'
+    }
+  }
+
+  const mockReplaceBlog = vi.fn()
+
+  const { container } = render(<Blog blog={blog} replaceBlog={mockReplaceBlog} removeBlog={blog => {}} />)
+
+  const user = userEvent.setup()
+  const showButton = container.querySelector('.showButton')
+  await user.click(showButton)
+
+  const likeButton = container.querySelector('.likeButton')
+
+  await user.click(likeButton)
+  await user.click(likeButton)
+
+  expect(mockReplaceBlog.mock.calls).toHaveLength(2)
+})
