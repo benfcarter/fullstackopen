@@ -35,7 +35,7 @@ const Blog = ({ blog, replaceBlog, removeBlog }) => {
   }
 
   return (
-    <div style={blogStyle} className='titleAuthor'>
+    <div data-testid='blogEntry' style={blogStyle} className='titleAuthor'>
       {blog.title} {blog.author}
       <button onClick={toggleDetails} className='showButton'>{showDetails ? 'hide' : 'show'}</button>
       <div style={showDetailsStyle} className='details'>

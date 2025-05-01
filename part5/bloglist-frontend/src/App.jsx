@@ -37,6 +37,7 @@ const App = () => {
 
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
 
+      blogService.setToken(user.token)
     } catch (exception) {
       showNotification('wrong username or password', true)
     }

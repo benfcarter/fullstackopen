@@ -3,6 +3,7 @@ const User = require('../models/user')
 
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization')
+
   if (authorization && authorization.startsWith('Bearer ')) {
     request.token = authorization.replace('Bearer ', '')
   } else {
@@ -24,6 +25,8 @@ const userExtractor = async (request, response, next) => {
 }
 
 const errorHandler = async (error, request, response, next) => {
+  console.log(error)
+
   if(error.name === 'JsonWebTokenError') {
     return response.status(401).json({
       error: 'invalid token'

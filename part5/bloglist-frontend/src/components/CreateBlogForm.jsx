@@ -16,17 +16,17 @@ const CreateBlogForm = ({ createBlog }) => {
       <form onSubmit={handleCreate}>
         <div>
           title:
-          <input type="text" value={title} name="Title" onChange={({ target }) => setTitle(target.value)} className='titleTextBox'/>
+          <input data-testid='title' type="text" value={title} name="Title" onChange={({ target }) => setTitle(target.value)} className='titleTextBox'/>
         </div>
         <div>
           author:
-          <input type="text" value={author} name="Author" onChange={({ target }) => setAuthor(target.value)} className='authorTextBox' />
+          <input data-testid='author' type="text" value={author} name="Author" onChange={({ target }) => setAuthor(target.value)} className='authorTextBox' />
         </div>
         <div>
           url:
-          <input type="text" value={url} name="URL" onChange={({ target }) => setUrl(target.value)} className='urlTextBox'/>
+          <input data-testid='url' type="text" value={url} name="URL" onChange={({ target }) => setUrl(target.value)} className='urlTextBox'/>
         </div>
-        <button type="submit">create</button>
+        <button data-testid='createBlogButton' type="submit">create</button>
       </form>
     </div>
   )
