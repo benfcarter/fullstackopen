@@ -1,5 +1,17 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
 
+const baseUrl = 'http://localhost:5173/api'
+
+const createUser = async(request, name, username, password) => {
+  await request.post(`${baseUrl}/users`, {
+    data: {
+      name: name,
+      username: username,
+      password: password
+    }
+  })
+}
+
 const testLogin = async (page) => {
   await page.getByRole('textbox').first().fill('root')
   await page.getByRole('textbox').last().fill('sekret')
@@ -17,15 +29,9 @@ const createBlog = async(page, title, author, url) => {
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
-    const baseUrl = 'http://localhost:5173/api'
     await request.post(`${baseUrl}/testing/reset`)
-    await request.post(`${baseUrl}/users`, {
-      data: {
-        name: 'Test Testington',
-        username: 'root',
-        password: 'sekret'
-      }
-    })
+
+    await createUser(request, 'Test Testington', 'root', 'sekret')
     
     await page.goto('http://localhost:5173')
   })
@@ -73,6 +79,18 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'like' }).click()
     
       await expect(page.getByText('likes 1')).toBeVisible()
+    })
+
+    test('a blog can be deleted', async ({ page }) => {
+      await createBlog(page, 'title', 'Author Authorson', 'google')
+
+      page.on('dialog', dialog => dialog.accept())
+
+      await page.getByTestId('blogEntry').first()
+      await page.getByRole('button', { name: 'show' }).click()
+      await page.getByRole('button', { name: 'remove' }).click()
+
+      await expect(page.getByTestId('blogEntry')).not.toBeVisible()
     })
   })
 })
