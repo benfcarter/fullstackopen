@@ -6,6 +6,15 @@ const testLogin = async (page) => {
   await page.getByRole('button', { name: 'login' }).click()
 }
 
+const createBlog = async(page, title, author, url) => {
+  await page.getByRole('button', { name: 'new blog' }).click()
+
+  await page.getByTestId('title').fill(title)
+  await page.getByTestId('author').fill('Author Authorson')
+  await page.getByTestId('url').fill('google')
+  await page.getByTestId('createBlogButton').click()
+}
+
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
     const baseUrl = 'http://localhost:5173/api'
@@ -48,18 +57,22 @@ describe('Blog app', () => {
     })
 
     test('a new blog can be created', async ({ page }) => {
-      await page.getByRole('button', { name: 'new blog' }).click()
-      await expect(page.getByText('create new')).toBeVisible()
-
       const title = 'Newest Blog'
 
-      await page.getByTestId('title').fill(title)
-      await page.getByTestId('author').fill('Author Authorson')
-      await page.getByTestId('url').fill('google')
-      await page.getByTestId('createBlogButton').click()
+      await createBlog(page, title, 'Author Authorson', 'google')
 
       await expect(page.getByTestId('blogEntry')).toBeVisible()
       await expect(page.getByTestId('blogEntry').getByText(title)).toBeVisible()
+    })
+
+    test('a blog can be liked', async ({ page }) => {
+      await createBlog(page, 'title', 'author', 'google')
+
+      const blogEntry = await page.getByTestId('blogEntry').first()
+      await page.getByRole('button', { name: 'show' }).click()
+      await page.getByRole('button', { name: 'like' }).click()
+    
+      await expect(page.getByText('likes 1')).toBeVisible()
     })
   })
 })
