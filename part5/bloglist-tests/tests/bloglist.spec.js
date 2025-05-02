@@ -26,11 +26,11 @@ const createBlog = async(page, title, author, url) => {
   await page.getByRole('button', { name: 'new blog' }).click()
 
   await page.getByTestId('title').fill(title)
-  await page.getByTestId('author').fill('Author Authorson')
-  await page.getByTestId('url').fill('google')
+  await page.getByTestId('author').fill(author)
+  await page.getByTestId('url').fill(url)
   await page.getByTestId('createBlogButton').click()
 
-  await expect(page.getByTestId('blogEntry')).toBeVisible()
+  await expect(page.getByTestId('blogEntry').getByText(title)).toBeVisible()
 }
 
 describe('Blog app', () => {
@@ -110,6 +110,30 @@ describe('Blog app', () => {
       await page.getByTestId('showDetails').click()
 
       await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
+    })
+
+    test('blogs are shown in descending order of likes', async ({ page }) => {
+      await createBlog(page, 'blog1', 'author1', 'url1')
+      await createBlog(page, 'blog2', 'author2', 'url2')
+      await createBlog(page, 'blog3', 'author3', 'url3')
+
+      const blogEntriesBefore = await page.getByTestId('blogEntry').all()
+
+      await blogEntriesBefore[0].getByTestId('showDetails').click()
+      const likeButton1 = await blogEntriesBefore[0].getByRole('button', { name: 'like' })
+      await blogEntriesBefore[1].getByTestId('showDetails').click()
+      const likeButton2 = await blogEntriesBefore[1].getByRole('button', { name: 'like' })
+      await blogEntriesBefore[2].getByTestId('showDetails').click()
+      const likeButton3 = await blogEntriesBefore[2].getByRole('button', { name: 'like' })
+
+      await likeButton2.click()
+      await likeButton2.click()
+      await likeButton3.click()
+
+      const blogEntriesAfter = await page.getByTestId('blogEntry').all()
+      await expect(blogEntriesAfter[0].getByText('blog2')).toBeVisible()
+      await expect(blogEntriesAfter[1].getByText('blog3')).toBeVisible()
+      await expect(blogEntriesAfter[2].getByText('blog1')).toBeVisible()
     })
   })
 })
