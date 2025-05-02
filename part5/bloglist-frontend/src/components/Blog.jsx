@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, replaceBlog, removeBlog }) => {
+const Blog = ({ blog, userId, replaceBlog, removeBlog }) => {
   const [showDetails, setShowDetails] = useState(false)
 
   const toggleDetails = () => {
@@ -18,6 +18,10 @@ const Blog = ({ blog, replaceBlog, removeBlog }) => {
 
   const showDetailsStyle = { display: showDetails ? '' : 'none' }
   const hideDetailsStyle = { display: showDetails ? 'none' : '' }
+
+  const shouldShowDelete = userId === blog.user.id
+  const removeButtonStyle = { display: shouldShowDelete ? '' : 'none' }
+
 
   const handleLike = (event) => {
     const updatedBlog = {
@@ -37,12 +41,12 @@ const Blog = ({ blog, replaceBlog, removeBlog }) => {
   return (
     <div data-testid='blogEntry' style={blogStyle} className='titleAuthor'>
       {blog.title} {blog.author}
-      <button onClick={toggleDetails} className='showButton'>{showDetails ? 'hide' : 'show'}</button>
+      <button data-testid='showDetails' onClick={toggleDetails} className='showButton'>{showDetails ? 'hide' : 'show'}</button>
       <div style={showDetailsStyle} className='details'>
         <div className='url'>{blog.url}</div>
         <div className='likes'>likes {blog.likes} <button onClick={handleLike} className='likeButton'>like</button></div>
         <div className='name'>{blog.user.name}</div>
-        <div><button onClick={handleRemove}>remove</button></div>
+        <div style={removeButtonStyle}><button onClick={handleRemove}>remove</button></div>
       </div>
     </div>
   )
