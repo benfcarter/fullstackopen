@@ -7,7 +7,14 @@ const AnecdoteList = () => {
   const anecdotes = useSelector(state => {
     return state.anecdotes
       .filter(x => x.content.toLowerCase().includes(state.filter.toLowerCase()))
-      .sort((a, b) => a.votes > b.votes ? -1 : 1)
+      .sort((a, b) => {
+        if(a.votes > b.votes) {
+          return -1
+        } else if (a.votes < b.votes) {
+          return 1
+        }
+        return 0
+      })
   })
 
   const vote = (id) => {
