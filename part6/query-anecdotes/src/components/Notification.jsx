@@ -1,4 +1,23 @@
+import { useReducer } from 'react'
+
+const notificationReducer = (state, action) => {
+  switch(action.type) {
+    case "SHOW_NOTIFICATION":
+      return {
+        content: action.payload.content,
+        visible: true
+      }
+    case "HIDE_NOTIFICATION":
+      return {
+        content: '',
+        visible: false
+      }
+  }
+}
+
 const Notification = () => {
+  const [notification, notificationDispatch] = useReducer(notificationReducer, {content: 'Test', visible: false})
+
   const style = {
     border: 'solid',
     padding: 10,
@@ -6,11 +25,11 @@ const Notification = () => {
     marginBottom: 5
   }
   
-  if (true) return null
+  if (!notification.visible) return null
 
   return (
     <div style={style}>
-      
+      {notification.content}
     </div>
   )
 }
