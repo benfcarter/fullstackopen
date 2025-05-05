@@ -1,22 +1,7 @@
-import { useReducer } from 'react'
-
-const notificationReducer = (state, action) => {
-  switch(action.type) {
-    case "SHOW_NOTIFICATION":
-      return {
-        content: action.payload.content,
-        visible: true
-      }
-    case "HIDE_NOTIFICATION":
-      return {
-        content: '',
-        visible: false
-      }
-  }
-}
+import { useNotificationValue } from '../NotificationContext'
 
 const Notification = () => {
-  const [notification, notificationDispatch] = useReducer(notificationReducer, {content: 'Test', visible: false})
+  const notification = useNotificationValue()
 
   const style = {
     border: 'solid',
