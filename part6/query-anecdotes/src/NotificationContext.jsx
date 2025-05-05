@@ -38,4 +38,20 @@ export const useNotificationDispatch = () => {
   return contentAndVisibility[1]
 }
 
+export const useSetNotificationDispatch = () => {
+  const notificationDispatch = useNotificationDispatch()
+  return (content, timeInSeconds) => {
+    notificationDispatch({
+      type: 'SHOW_NOTIFICATION',
+      payload: {
+        content
+      }
+    })
+
+    setTimeout(() => {
+      notificationDispatch({ type: 'HIDE_NOTIFICATION' })
+    }, timeInSeconds * 1000)
+  }
+}
+
 export default NotificationContext
