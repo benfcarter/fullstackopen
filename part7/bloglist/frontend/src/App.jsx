@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -6,22 +6,11 @@ import Togglable from "./components/Togglable";
 import Notification from "./components/Notification";
 import CreateBlogForm from "./components/CreateBlogForm";
 
-import { useReducer } from 'react'
-
-const notificationReducer = (state, action) => {
-  switch(action.type) {
-    case 'SET_NOTIFICATION':
-      return action.payload
-    case 'CLEAR_NOTIFICATION':
-      return null;
-    default:
-      return state
-  }
-}
+import NotificationContext from "./contexts/NotificationContext";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [notification, notificationDispatch] = useReducer(notificationReducer, null)
+  const [notification, notificationDispatch] = useContext(NotificationContext)
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -69,7 +58,6 @@ const App = () => {
   const createBlog = (newBlog) => {
     try {
       blogService.create(newBlog).then((data) => {
-        console.log(data);
         blogFormRef.current.toggleVisibility();
         updateBlogList(blogs.concat(data));
         showNotification(
