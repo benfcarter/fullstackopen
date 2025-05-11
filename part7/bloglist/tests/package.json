@@ -1,0 +1,18 @@
+{
+  "name": "bloglist-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for the bloglist app using Playwright",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report",
+    "test:blog": "playwright test bloglist.spec.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.3"
+  }
+}
