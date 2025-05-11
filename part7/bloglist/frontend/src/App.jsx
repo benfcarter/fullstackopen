@@ -6,9 +6,22 @@ import Togglable from "./components/Togglable";
 import Notification from "./components/Notification";
 import CreateBlogForm from "./components/CreateBlogForm";
 
+import { useReducer } from 'react'
+
+const notificationReducer = (state, action) => {
+  switch(action.type) {
+    case 'SET_NOTIFICATION':
+      return action.payload
+    case 'CLEAR_NOTIFICATION':
+      return null;
+    default:
+      return state
+  }
+}
+
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [notification, setNotification] = useState(null);
+  const [notification, notificationDispatch] = useReducer(notificationReducer, null)
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -16,9 +29,9 @@ const App = () => {
   const blogFormRef = useRef();
 
   const showNotification = (message, isError) => {
-    setNotification({ message, isError });
+    notificationDispatch({type: 'SET_NOTIFICATION', payload: {message, isError}})
     setTimeout(() => {
-      setNotification(null);
+      notificationDispatch({type: 'CLEAR_NOTIFICATION'})
     }, 5000);
   };
 
