@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useContext } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -9,7 +11,6 @@ import CreateBlogForm from "./components/CreateBlogForm";
 import NotificationContext from "./contexts/NotificationContext";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [notification, notificationDispatch] = useContext(NotificationContext)
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +24,27 @@ const App = () => {
       notificationDispatch({type: 'CLEAR_NOTIFICATION'})
     }, 5000);
   };
+
+  const queryClient = useQueryClient()
+
+  const result = useQuery({
+    queryKey: ['blogs'],
+    queryFn: () => blogService.getAll().then((data) => data.sort((a, b) => b.likes - a.likes))
+  })
+
+  const blogs = result.data
+
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: (data) => {
+      blogFormRef.current.toggleVisibility();
+      showNotification(
+        `a new blog ${data.title} by ${data.author} added`,
+        false,
+      );
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    }
+  })
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -41,6 +63,7 @@ const App = () => {
 
       blogService.setToken(user.token);
     } catch (exception) {
+
       showNotification("wrong username or password", true);
     }
   };
@@ -52,19 +75,12 @@ const App = () => {
   };
 
   const updateBlogList = (blogs) => {
-    setBlogs(blogs.sort((a, b) => b.likes - a.likes));
+    //setBlogs(blogs.sort((a, b) => b.likes - a.likes));
   };
 
   const createBlog = (newBlog) => {
     try {
-      blogService.create(newBlog).then((data) => {
-        blogFormRef.current.toggleVisibility();
-        updateBlogList(blogs.concat(data));
-        showNotification(
-          `a new blog ${data.title} by ${data.author} added`,
-          false,
-        );
-      });
+      newBlogMutation.mutate(newBlog)
     } catch (exception) {
       showNotification(`Error creating blog: ${exception.message}`, true);
     }
@@ -99,12 +115,6 @@ const App = () => {
   };
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      updateBlogList(blogs);
-    });
-  }, []);
-
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
@@ -112,6 +122,12 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, []);
+
+  
+  if(result.isLoading) {
+    return <div>loading...</div>
+  }
+
 
   if (user === null) {
     return (
