@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-const Blog = ({ blog, userId, replaceBlog, removeBlog }) => {
+const Blog = ({ blog, userId, likeBlog, removeBlog }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   const toggleDetails = () => {
@@ -23,14 +23,7 @@ const Blog = ({ blog, userId, replaceBlog, removeBlog }) => {
   const removeButtonStyle = { display: shouldShowDelete ? "" : "none" };
 
   const handleLike = (event) => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-    };
-
-    blog.likes++;
-
-    replaceBlog(updatedBlog);
+    likeBlog(blog);
   };
 
   const handleRemove = (event) => {
@@ -66,7 +59,7 @@ const Blog = ({ blog, userId, replaceBlog, removeBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  replaceBlog: PropTypes.func.isRequired,
+  likeBlog: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired,
 };
 

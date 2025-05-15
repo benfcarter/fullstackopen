@@ -23,10 +23,15 @@ const create = async (newBlog) => {
   return response.data;
 };
 
-const replace = (updatedBlog) => {
-  const response = axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog);
-  return response;
+const replace = async (updatedBlog) => {
+  const response = await axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog);
+  return response.data;
 };
+
+const like = async (blogToLike) => {
+  const updatedBlog = {...blogToLike, likes: blogToLike.likes + 1}
+  return await replace(updatedBlog)
+}
 
 const remove = (blogToRemove) => {
   console.log(`Removing blog ${blogToRemove.title}`);
@@ -35,7 +40,7 @@ const remove = (blogToRemove) => {
   };
 
   const response = axios.delete(`${baseUrl}/${blogToRemove.id}`, config);
-  return response;
+  return response.data;
 };
 
-export default { getAll, setToken, create, replace, remove };
+export default { getAll, setToken, create, replace, like, remove };

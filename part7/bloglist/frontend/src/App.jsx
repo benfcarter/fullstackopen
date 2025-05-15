@@ -46,6 +46,13 @@ const App = () => {
     }
   })
 
+  const likeBlogMutation = useMutation({
+    mutationFn: blogService.like,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    }
+  })
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -86,13 +93,9 @@ const App = () => {
     }
   };
 
-  const replaceBlog = (updatedBlog) => {
+  const likeBlog = (blogToLike) => {
     try {
-      blogService.replace(updatedBlog).then((data) => {
-        updateBlogList(
-          blogs.map((blog) => (blog.id === data.id ? data : blog)),
-        );
-      });
+      likeBlogMutation.mutate(blogToLike)
     } catch (exception) {
       showNotification(`Error adding like: ${exception.message}`, true);
     }
@@ -177,7 +180,7 @@ const App = () => {
           key={blog.id}
           blog={blog}
           userId={user.id}
-          replaceBlog={replaceBlog}
+          likeBlog={likeBlog}
           removeBlog={removeBlog}
         />
       ))}
