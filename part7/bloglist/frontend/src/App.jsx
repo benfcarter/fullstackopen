@@ -53,6 +53,13 @@ const App = () => {
     }
   })
 
+  const removeBlogMutation = useMutation({
+    mutationFn: blogService.remove,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    }
+  })
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -103,15 +110,8 @@ const App = () => {
 
   const removeBlog = (blogToRemove) => {
     try {
-      if (
-        window.confirm(
-          `Remove blog ${blogToRemove.title} by ${blogToRemove.author}?`,
-        )
-      ) {
-        blogService.remove(blogToRemove);
-        updateBlogList(blogs.filter((blog) => blog.id !== blogToRemove.id));
-        showNotification(`Removed ${blogToRemove.title}`, false);
-      }
+      removeBlogMutation.mutate(blogToRemove)
+      showNotification(`Removed ${blogToRemove.title}`, false);
     } catch (exception) {
       showNotification(`Error removing blog: ${exception.message}`, true);
     }

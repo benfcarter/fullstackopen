@@ -12,25 +12,25 @@ const getAll = () => {
   return request.then((response) => response.data);
 };
 
-const create = async (newBlog) => {
+const create = (newBlog) => {
   console.log(`Creating blog...`)
   console.log(newBlog)
   const config = {
     headers: { Authorization: token },
   };
 
-  const response = await axios.post(baseUrl, newBlog, config);
-  return response.data;
+  const request = axios.post(baseUrl, newBlog, config);
+  return request.then(response => response.data);
 };
 
-const replace = async (updatedBlog) => {
-  const response = await axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog);
-  return response.data;
+const replace = (updatedBlog) => {
+  const request = axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog);
+  return request.then(response => response.data);
 };
 
-const like = async (blogToLike) => {
+const like = (blogToLike) => {
   const updatedBlog = {...blogToLike, likes: blogToLike.likes + 1}
-  return await replace(updatedBlog)
+  return replace(updatedBlog)
 }
 
 const remove = (blogToRemove) => {
@@ -39,8 +39,8 @@ const remove = (blogToRemove) => {
     headers: { Authorization: token },
   };
 
-  const response = axios.delete(`${baseUrl}/${blogToRemove.id}`, config);
-  return response.data;
+  const request = axios.delete(`${baseUrl}/${blogToRemove.id}`, config);
+  return request.then(response => response.data);
 };
 
 export default { getAll, setToken, create, replace, like, remove };
