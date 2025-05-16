@@ -1,10 +1,13 @@
 import { createContext, useReducer, useContext } from "react"
+import blogService from "../services/blogs";
 
 const userReducer = (state, action) => {
   switch(action.type) {
     case 'SET_USER':
+      blogService.setToken(action.payload.token)
       return action.payload
     case 'CLEAR_USER':
+      blogService.setToken(null)
       return null;
     default:
       return state

@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useContext } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useContext } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
@@ -7,15 +7,10 @@ import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import CreateBlogForm from "./components/CreateBlogForm";
 
-import { useShowNotification } from "./contexts/NotificationContext";
 import UserContext from "./contexts/UserContext";
 
 const App = () => {
   const [user, userDispatch] = useContext(UserContext)
-
-  const queryClient = useQueryClient()
-
-  const showNotification = useShowNotification()
 
   const result = useQuery({
     queryKey: ['blogs'],
@@ -24,41 +19,9 @@ const App = () => {
 
   const blogs = result.data
 
-  const likeBlogMutation = useMutation({
-    mutationFn: blogService.like,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['blogs'] })
-    }
-  })
-
-  const removeBlogMutation = useMutation({
-    mutationFn: blogService.remove,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['blogs'] })
-    }
-  })
-
   const handleLogout = () => {
     userDispatch({ type: 'CLEAR_USER' })
-    blogService.setToken(null);
     window.localStorage.removeItem("loggedBlogAppUser");
-  };
-
-  const likeBlog = (blogToLike) => {
-    try {
-      likeBlogMutation.mutate(blogToLike)
-    } catch (exception) {
-      showNotification(`Error adding like: ${exception.message}`, true);
-    }
-  };
-
-  const removeBlog = (blogToRemove) => {
-    try {
-      removeBlogMutation.mutate(blogToRemove)
-      showNotification(`Removed ${blogToRemove.title}`, false);
-    } catch (exception) {
-      showNotification(`Error removing blog: ${exception.message}`, true);
-    }
   };
 
   useEffect(() => {
@@ -66,7 +29,6 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       userDispatch({ type: 'SET_USER', payload: user })
-      blogService.setToken(user.token);
     }
   }, []);
 
@@ -74,7 +36,6 @@ const App = () => {
   if(result.isLoading) {
     return <div>loading...</div>
   }
-
 
   if (user === null) {
     return (
@@ -100,8 +61,6 @@ const App = () => {
           key={blog.id}
           blog={blog}
           userId={user.id}
-          likeBlog={likeBlog}
-          removeBlog={removeBlog}
         />
       ))}
     </div>

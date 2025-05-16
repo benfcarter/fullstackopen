@@ -1,8 +1,17 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import PropTypes from "prop-types";
 
-const Blog = ({ blog, userId, likeBlog, removeBlog }) => {
+import { useShowNotification } from "../contexts/NotificationContext";
+
+import blogService from "../services/blogs";
+
+const Blog = ({ blog, userId }) => {
   const [showDetails, setShowDetails] = useState(false);
+
+  const queryClient = useQueryClient()
+
+  const showNotification = useShowNotification()
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
@@ -22,12 +31,27 @@ const Blog = ({ blog, userId, likeBlog, removeBlog }) => {
   const shouldShowDelete = userId === blog.user.id;
   const removeButtonStyle = { display: shouldShowDelete ? "" : "none" };
 
+  const likeBlogMutation = useMutation({
+    mutationFn: blogService.like,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    }
+  })
+
+  const removeBlogMutation = useMutation({
+    mutationFn: blogService.remove,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['blogs'] })
+    }
+  })
+
   const handleLike = (event) => {
-    likeBlog(blog);
+    likeBlogMutation.mutate(blog)
   };
 
   const handleRemove = (event) => {
-    removeBlog(blog);
+    showNotification(`Removed ${blog.title}`, false);
+    removeBlogMutation.mutate(blog)
   };
 
   return (
@@ -59,8 +83,6 @@ const Blog = ({ blog, userId, likeBlog, removeBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  likeBlog: PropTypes.func.isRequired,
-  removeBlog: PropTypes.func.isRequired,
 };
 
 export default Blog;

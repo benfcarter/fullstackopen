@@ -8,10 +8,6 @@ import blogService from "../services/blogs";
 import Togglable from "../components/Togglable";
 
 const CreateBlogForm = () => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
-
   const blogFormRef = useRef();
 
   const showNotification = useShowNotification()
@@ -32,7 +28,11 @@ const CreateBlogForm = () => {
 
   const handleCreate = (event) => {
     event.preventDefault();
-    const newBlog = {title, author, url };
+    const newBlog = {
+      title: event.target.title.value,
+      author: event.target.author.value,
+      url: event.target.url.value,
+    };
     event.target.title.value = ''
     event.target.author.value = ''
     event.target.url.value = ''
@@ -48,9 +48,7 @@ const CreateBlogForm = () => {
         <input
           data-testid="title"
           type="text"
-          value={title}
           name="title"
-          onChange={({ target }) => setTitle(target.value)}
           className="titleTextBox"
         />
       </div>
@@ -59,9 +57,7 @@ const CreateBlogForm = () => {
         <input
           data-testid="author"
           type="text"
-          value={author}
           name="author"
-          onChange={({ target }) => setAuthor(target.value)}
           className="authorTextBox"
         />
       </div>
@@ -70,9 +66,7 @@ const CreateBlogForm = () => {
         <input
           data-testid="url"
           type="text"
-          value={url}
           name="url"
-          onChange={({ target }) => setUrl(target.value)}
           className="urlTextBox"
         />
       </div>
