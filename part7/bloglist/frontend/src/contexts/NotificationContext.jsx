@@ -31,4 +31,22 @@ export const useNotificationDispatch = () => {
   return useContext(NotificationContext)[1]
 }
 
+export const useShowNotification = () => {
+  const dispatch = useNotificationDispatch()
+  return (message, isError, displayTimeInSeconds = 5) => {
+    const newNotification = {
+      message,
+      isError
+    }
+
+    dispatch({ type: 'SET_NOTIFICATION', payload: newNotification })
+    if(displayTimeInSeconds > 0) {
+      setTimeout(() => {
+        dispatch({ type: 'CLEAR_NOTIFICATION' })
+      }, displayTimeInSeconds * 1000)
+    }
+  }
+
+}
+
 export default NotificationContext

@@ -8,7 +8,7 @@ import Togglable from "./components/Togglable";
 import Notification from "./components/Notification";
 import CreateBlogForm from "./components/CreateBlogForm";
 
-import { useNotificationDispatch } from "./contexts/NotificationContext";
+import { useNotificationDispatch, useShowNotification } from "./contexts/NotificationContext";
 import UserContext from "./contexts/UserContext";
 
 const App = () => {
@@ -18,11 +18,7 @@ const App = () => {
 
   const blogFormRef = useRef();
 
-  const notificationDispatch = useNotificationDispatch()
-
-  const showNotification = (message, isError) => {
-    notificationDispatch({type: 'SET_NOTIFICATION', payload: {message, isError}})
-  };
+  const showNotification = useShowNotification()
 
   const queryClient = useQueryClient()
 

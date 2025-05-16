@@ -1,18 +1,8 @@
 import { useContext, useEffect } from 'react'
-import NotificationContext from "../contexts/NotificationContext";
+import { useNotificationValue } from "../contexts/NotificationContext";
 
 const Notification = () => {
-  const [notification, notificationDispatch] = useContext(NotificationContext)
-
-  useEffect(() => {
-    if(!notification) {
-      return
-    }
-
-    setTimeout(() => {
-      notificationDispatch({ type: 'CLEAR_NOTIFICATION' })
-    }, 5000)
-  }, [notification])
+  const notification = useNotificationValue()
 
   if (notification === null) {
     return null;
