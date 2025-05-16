@@ -9,12 +9,13 @@ import Notification from "./components/Notification";
 import CreateBlogForm from "./components/CreateBlogForm";
 
 import NotificationContext from "./contexts/NotificationContext";
+import UserContext from "./contexts/UserContext";
 
 const App = () => {
   const [notification, notificationDispatch] = useContext(NotificationContext)
+  const [user, userDispatch] = useContext(UserContext)
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
 
   const blogFormRef = useRef();
 
@@ -69,7 +70,7 @@ const App = () => {
         password,
       });
 
-      setUser(user);
+      userDispatch({ type: 'SET_USER', payload: user })
       setUsername("");
       setPassword("");
 
@@ -83,13 +84,9 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    setUser(null);
+    userDispatch({ type: 'CLEAR_USER' })
     blogService.setToken(null);
     window.localStorage.removeItem("loggedBlogAppUser");
-  };
-
-  const updateBlogList = (blogs) => {
-    //setBlogs(blogs.sort((a, b) => b.likes - a.likes));
   };
 
   const createBlog = (newBlog) => {
@@ -121,7 +118,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      userDispatch({ type: 'SET_USER', payload: user })
       blogService.setToken(user.token);
     }
   }, []);
