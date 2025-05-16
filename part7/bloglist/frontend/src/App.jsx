@@ -1,8 +1,13 @@
 import { useEffect, useContext } from "react";
+import {
+  BrowserRouter as Router,
+  Routes, Route
+} from 'react-router-dom'
 
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import BlogListView from "./components/BlogListView";
+import UserListView from "./components/UserListView";
 
 import { useBlogQuery } from "./queries/blogQuery";
 
@@ -41,15 +46,18 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Router>
       <Notification />
       <h2>blogs</h2>
       <p>
         Logged in as {user.username}
         <button onClick={handleLogout}>log out</button>
       </p>
-      <BlogListView />      
-    </div>
+      <Routes>
+        <Route path="/" element={<BlogListView />} />
+        <Route path="/users" element={<UserListView />} />
+      </Routes>
+    </Router>
   );
 };
 
