@@ -1,23 +1,15 @@
 import { useEffect, useContext } from "react";
-import { useQuery } from "@tanstack/react-query";
 
-import Blog from "./components/Blog";
-import blogService from "./services/blogs";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import CreateBlogForm from "./components/CreateBlogForm";
+import { useBlogQuery } from "./queries/blogQuery";
+import BlogList from "./components/BlogList"
 
 import UserContext from "./contexts/UserContext";
 
 const App = () => {
   const [user, userDispatch] = useContext(UserContext)
-
-  const result = useQuery({
-    queryKey: ['blogs'],
-    queryFn: () => blogService.getAll().then((data) => data.sort((a, b) => b.likes - a.likes))
-  })
-
-  const blogs = result.data
 
   const handleLogout = () => {
     userDispatch({ type: 'CLEAR_USER' })
@@ -32,6 +24,7 @@ const App = () => {
     }
   }, []);
 
+  const result = useBlogQuery()
   
   if(result.isLoading) {
     return <div>loading...</div>
@@ -56,13 +49,7 @@ const App = () => {
         <button onClick={handleLogout}>log out</button>
       </p>
       <CreateBlogForm />
-      {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          userId={user.id}
-        />
-      ))}
+      <BlogList />
     </div>
   );
 };
