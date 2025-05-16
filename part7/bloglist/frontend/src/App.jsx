@@ -1,7 +1,7 @@
 import { useEffect, useContext } from "react";
 import {
   BrowserRouter as Router,
-  Routes, Route
+  Routes, Route, Link
 } from 'react-router-dom'
 
 import LoginForm from "./components/LoginForm";
@@ -47,14 +47,21 @@ const App = () => {
     );
   }
 
+  const padding = {
+    padding: 5
+  }
+
   return (
     <Router>
+      <div>
+        <Link style={padding} to="/">blogs</Link>
+        <Link style={padding} to="/users">users</Link>
+        {user.name} logged in <button onClick={handleLogout}>logout</button>
+      </div>
+
       <Notification />
-      <h2>blogs</h2>
-      <p>
-        Logged in as {user.username}
-        <button onClick={handleLogout}>log out</button>
-      </p>
+      <h2>blog app</h2>
+
       <Routes>
         <Route path="/" element={<BlogListView />} />
         <Route path="/blogs/:id" element={<BlogView />} />
