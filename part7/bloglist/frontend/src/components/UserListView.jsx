@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useUserQuery } from '../queries/userQuery'
 
 const UserListView = () => {
@@ -22,7 +23,7 @@ const UserListView = () => {
         </tr>
         {users.map((user) => (
           <tr>
-            <td>{user.name}</td>
+            <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
             <td>{user.blogs.length}</td>
           </tr>
         ))}

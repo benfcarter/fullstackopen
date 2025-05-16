@@ -8,6 +8,7 @@ import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import BlogListView from "./components/BlogListView";
 import UserListView from "./components/UserListView";
+import UserView from "./components/UserView"
 
 import { useBlogQuery } from "./queries/blogQuery";
 
@@ -56,6 +57,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<BlogListView />} />
         <Route path="/users" element={<UserListView />} />
+        <Route path="/users/:id" element={<UserView /> } />
       </Routes>
     </Router>
   );
