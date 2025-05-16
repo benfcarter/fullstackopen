@@ -13,8 +13,6 @@ const getAll = () => {
 };
 
 const create = (newBlog) => {
-  console.log(`Creating blog...`)
-  console.log(newBlog)
   const config = {
     headers: { Authorization: token },
   };
@@ -34,7 +32,6 @@ const like = (blogToLike) => {
 }
 
 const remove = (blogToRemove) => {
-  console.log(`Removing blog ${blogToRemove.title}`);
   const config = {
     headers: { Authorization: token },
   };
