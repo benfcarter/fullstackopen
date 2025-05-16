@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom"
 import { useBlogQuery } from "../queries/blogQuery"
 
-import Blog from "./Blog"
-
 const BlogList = () => {
   const blogQuery = useBlogQuery()
   const blogs = blogQuery.data
