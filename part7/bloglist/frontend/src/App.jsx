@@ -8,22 +8,20 @@ import Togglable from "./components/Togglable";
 import Notification from "./components/Notification";
 import CreateBlogForm from "./components/CreateBlogForm";
 
-import NotificationContext from "./contexts/NotificationContext";
+import { useNotificationDispatch } from "./contexts/NotificationContext";
 import UserContext from "./contexts/UserContext";
 
 const App = () => {
-  const [notification, notificationDispatch] = useContext(NotificationContext)
   const [user, userDispatch] = useContext(UserContext)
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const blogFormRef = useRef();
 
+  const notificationDispatch = useNotificationDispatch()
+
   const showNotification = (message, isError) => {
     notificationDispatch({type: 'SET_NOTIFICATION', payload: {message, isError}})
-    setTimeout(() => {
-      notificationDispatch({type: 'CLEAR_NOTIFICATION'})
-    }, 5000);
   };
 
   const queryClient = useQueryClient()
@@ -78,7 +76,6 @@ const App = () => {
 
       blogService.setToken(user.token);
     } catch (exception) {
-
       showNotification("wrong username or password", true);
     }
   };
@@ -132,7 +129,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Notification notification={notification} />
+        <Notification />
         <h2>log in to application</h2>
 
         <form onSubmit={handleLogin}>
@@ -162,7 +159,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification notification={notification} />
+      <Notification />
       <h2>blogs</h2>
       <p>
         Logged in as {user.username}

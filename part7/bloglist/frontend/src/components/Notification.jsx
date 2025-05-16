@@ -1,4 +1,19 @@
-const Notification = ({ notification }) => {
+import { useContext, useEffect } from 'react'
+import NotificationContext from "../contexts/NotificationContext";
+
+const Notification = () => {
+  const [notification, notificationDispatch] = useContext(NotificationContext)
+
+  useEffect(() => {
+    if(!notification) {
+      return
+    }
+
+    setTimeout(() => {
+      notificationDispatch({ type: 'CLEAR_NOTIFICATION' })
+    }, 5000)
+  }, [notification])
+
   if (notification === null) {
     return null;
   }
