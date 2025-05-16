@@ -3,18 +3,16 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
-import loginService from "./services/login";
+import LoginForm from "./components/LoginForm";
 import Togglable from "./components/Togglable";
 import Notification from "./components/Notification";
 import CreateBlogForm from "./components/CreateBlogForm";
 
-import { useNotificationDispatch, useShowNotification } from "./contexts/NotificationContext";
+import { useShowNotification } from "./contexts/NotificationContext";
 import UserContext from "./contexts/UserContext";
 
 const App = () => {
   const [user, userDispatch] = useContext(UserContext)
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
 
   const blogFormRef = useRef();
 
@@ -54,27 +52,6 @@ const App = () => {
       queryClient.invalidateQueries({ queryKey: ['blogs'] })
     }
   })
-
-  const handleLogin = async (event) => {
-    event.preventDefault();
-
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-
-      userDispatch({ type: 'SET_USER', payload: user })
-      setUsername("");
-      setPassword("");
-
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-
-      blogService.setToken(user.token);
-    } catch (exception) {
-      showNotification("wrong username or password", true);
-    }
-  };
 
   const handleLogout = () => {
     userDispatch({ type: 'CLEAR_USER' })
@@ -127,28 +104,7 @@ const App = () => {
       <div>
         <Notification />
         <h2>log in to application</h2>
-
-        <form onSubmit={handleLogin}>
-          <div>
-            username
-            <input
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            password
-            <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type="submit">login</button>
-        </form>
+        <LoginForm />
       </div>
     );
   }

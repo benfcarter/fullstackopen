@@ -1,4 +1,3 @@
-import { useContext, useEffect } from 'react'
 import { useNotificationValue } from "../contexts/NotificationContext";
 
 const Notification = () => {
