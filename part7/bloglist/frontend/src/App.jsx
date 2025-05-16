@@ -7,6 +7,7 @@ import {
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import BlogListView from "./components/BlogListView";
+import BlogView from "./components/BlogView";
 import UserListView from "./components/UserListView";
 import UserView from "./components/UserView"
 
@@ -56,6 +57,7 @@ const App = () => {
       </p>
       <Routes>
         <Route path="/" element={<BlogListView />} />
+        <Route path="/blogs/:id" element={<BlogView />} />
         <Route path="/users" element={<UserListView />} />
         <Route path="/users/:id" element={<UserView /> } />
       </Routes>

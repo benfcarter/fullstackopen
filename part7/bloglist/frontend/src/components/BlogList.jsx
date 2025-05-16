@@ -1,22 +1,18 @@
+import { Link } from "react-router-dom"
 import { useBlogQuery } from "../queries/blogQuery"
-import { useUserValue } from "../contexts/UserContext"
 
 import Blog from "./Blog"
 
 const BlogList = () => {
-  const result = useBlogQuery()
-  const blogs = result.data
-
-  const user = useUserValue()
+  const blogQuery = useBlogQuery()
+  const blogs = blogQuery.data
 
   return (
     <div>
       {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          userId={user.id}
-        />
+        <p key={blog.id}>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+        </p>
       ))}
     </div>
   )
