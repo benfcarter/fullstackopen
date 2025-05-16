@@ -2,9 +2,9 @@ import { useEffect, useContext } from "react";
 
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
-import CreateBlogForm from "./components/CreateBlogForm";
+import BlogListView from "./components/BlogListView";
+
 import { useBlogQuery } from "./queries/blogQuery";
-import BlogList from "./components/BlogList"
 
 import UserContext from "./contexts/UserContext";
 
@@ -48,8 +48,7 @@ const App = () => {
         Logged in as {user.username}
         <button onClick={handleLogout}>log out</button>
       </p>
-      <CreateBlogForm />
-      <BlogList />
+      <BlogListView />      
     </div>
   );
 };
