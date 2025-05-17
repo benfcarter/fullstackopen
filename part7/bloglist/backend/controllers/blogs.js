@@ -91,7 +91,6 @@ blogsRouter.post("/:id/comments", async (request, response) => {
     response.status(404).json(`No blog entry with id ${id} exists`);
   }
 
-  console.log(request.body)
   blog.comments.push(request.body.comment)
 
   await blog.save();
