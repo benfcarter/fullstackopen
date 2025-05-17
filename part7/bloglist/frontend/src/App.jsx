@@ -54,8 +54,8 @@ const App = () => {
   return (
     <Router>
       <div>
-        <Link style={padding} to="/">blogs</Link>
-        <Link style={padding} to="/users">users</Link>
+        <Link data-testid="nav_blogs" style={padding} to="/">blogs</Link>
+        <Link data-testid="nav_users" style={padding} to="/users">users</Link>
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </div>
 

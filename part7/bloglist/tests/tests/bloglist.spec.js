@@ -19,7 +19,7 @@ const testLogin = async (page, username, password) => {
 }
 
 const testLogout = async (page) => {
-  await page.getByRole('button', { name: 'log out'}).click()
+  await page.getByRole('button', { name: 'logout'}).click()
 }
 
 const createBlog = async(page, title, author, url) => {
@@ -52,7 +52,7 @@ describe('Blog app', () => {
     test('succeeds with correct credentials', async({ page }) => {
       await testLogin(page, 'root', 'sekret')
 
-      await expect(page.getByText('Logged in as root')).toBeVisible()
+      await expect(page.getByText('Test Testington logged in')).toBeVisible()
     })
 
     test('fails with wrong credentials', async ({ page }) => {
@@ -60,7 +60,7 @@ describe('Blog app', () => {
       await page.getByRole('textbox').last().fill('credentials')
       await page.getByRole('button', { name: 'login' }).click()
 
-      await expect(page.getByText('Logged in as')).not.toBeVisible()
+      await expect(page.getByText('logged in')).not.toBeVisible()
     })
   })
 
@@ -82,7 +82,7 @@ describe('Blog app', () => {
       await createBlog(page, 'title', 'author', 'google')
 
       const blogEntry = await page.getByTestId('blogEntry').first()
-      await page.getByRole('button', { name: 'show' }).click()
+      await blogEntry.click()
       await page.getByRole('button', { name: 'like' }).click()
     
       await expect(page.getByText('likes 1')).toBeVisible()
@@ -93,8 +93,8 @@ describe('Blog app', () => {
 
       page.on('dialog', dialog => dialog.accept())
 
-      await page.getByTestId('blogEntry').first()
-      await page.getByRole('button', { name: 'show' }).click()
+      const blogEntry = await page.getByTestId('blogEntry').first()
+      await blogEntry.click()
       await page.getByRole('button', { name: 'remove' }).click()
 
       await expect(page.getByTestId('blogEntry')).not.toBeVisible()
@@ -106,8 +106,8 @@ describe('Blog app', () => {
 
       await testLogin(page, 'root2', 'boogaloo')
 
-      await page.getByTestId('blogEntry').first()
-      await page.getByTestId('showDetails').click()
+      const blogEntry = await page.getByTestId('blogEntry').first()
+      await blogEntry.click()
 
       await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
     })
@@ -117,18 +117,21 @@ describe('Blog app', () => {
       await createBlog(page, 'blog2', 'author2', 'url2')
       await createBlog(page, 'blog3', 'author3', 'url3')
 
+      const navBlogs = await page.getByTestId('nav_blogs').first()
       const blogEntriesBefore = await page.getByTestId('blogEntry').all()
 
-      await blogEntriesBefore[0].getByTestId('showDetails').click()
-      const likeButton1 = await blogEntriesBefore[0].getByRole('button', { name: 'like' })
-      await blogEntriesBefore[1].getByTestId('showDetails').click()
-      const likeButton2 = await blogEntriesBefore[1].getByRole('button', { name: 'like' })
-      await blogEntriesBefore[2].getByTestId('showDetails').click()
-      const likeButton3 = await blogEntriesBefore[2].getByRole('button', { name: 'like' })
+      await blogEntriesBefore[1].click()
+      const likeButton2 = await page.getByRole('button', { name: 'like' })
 
       await likeButton2.click()
       await likeButton2.click()
+      await navBlogs.click()
+
+      await blogEntriesBefore[2].click()
+      const likeButton3 = await page.getByRole('button', { name: 'like' })
+
       await likeButton3.click()
+      await navBlogs.click()
 
       const blogEntriesAfter = await page.getByTestId('blogEntry').all()
       await expect(blogEntriesAfter[0].getByText('blog2')).toBeVisible()

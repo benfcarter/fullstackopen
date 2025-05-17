@@ -9,7 +9,7 @@ const BlogList = () => {
     <div>
       {blogs.map((blog) => (
         <p key={blog.id}>
-          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          <Link data-testid="blogEntry" to={`/blogs/${blog.id}`}>{blog.title}</Link>
         </p>
       ))}
     </div>
