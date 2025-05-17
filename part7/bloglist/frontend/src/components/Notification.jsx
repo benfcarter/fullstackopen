@@ -1,3 +1,7 @@
+import {
+  Alert,
+} from '@mui/material'
+
 import { useNotificationValue } from "../contexts/NotificationContext";
 
 const Notification = () => {
@@ -7,22 +11,10 @@ const Notification = () => {
     return null;
   }
 
-  const errorStyle = {
-    color: "red",
-    background: "lightgrey",
-    fontSize: "20px",
-    borderStyle: "solid",
-    borderRadius: "5px",
-    padding: "10px",
-    marginBottom: "10px",
-  };
-
-  const successStyle = { ...errorStyle, color: "green" };
-
   return (
-    <div style={notification.isError ? errorStyle : successStyle}>
+    <Alert severity={notification.isError ? "error" : "success"}>
       {notification.message}
-    </div>
+    </Alert>
   );
 };
 
