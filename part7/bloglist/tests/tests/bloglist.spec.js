@@ -23,11 +23,11 @@ const testLogout = async (page) => {
 }
 
 const createBlog = async(page, title, author, url) => {
-  await page.getByRole('button', { name: 'new blog' }).click()
+  await page.getByTestId('create_blog').click()
 
-  await page.getByTestId('title').fill(title)
-  await page.getByTestId('author').fill(author)
-  await page.getByTestId('url').fill(url)
+  await page.getByRole('textbox', { name: 'title' } ).first().fill(title)
+  await page.getByRole('textbox', { name: 'author' } ).first().fill(author)
+  await page.getByRole('textbox', { name: 'url' } ).first().fill(url)
   await page.getByTestId('createBlogButton').click()
 
   await expect(page.getByTestId('blogEntry').getByText(title)).toBeVisible()

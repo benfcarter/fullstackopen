@@ -1,14 +1,19 @@
-import { useState, useRef } from "react";
+import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+import {
+  Button,
+  TextField,
+} from '@mui/material'
 
 import { useShowNotification } from "../contexts/NotificationContext";
 
 import blogService from "../services/blogs";
 
-import Togglable from "../components/Togglable";
-
 const CreateBlogForm = () => {
-  const blogFormRef = useRef();
+  const [title, setTitle] = useState("")
+  const [author, setAuthor] = useState("")
+  const [url, setUrl] = useState("")
 
   const showNotification = useShowNotification()
 
@@ -17,7 +22,6 @@ const CreateBlogForm = () => {
   const newBlogMutation = useMutation({
     mutationFn: blogService.create,
     onSuccess: (data) => {
-      blogFormRef.current.toggleVisibility();
       showNotification(
         `a new blog ${data.title} by ${data.author} added`,
         false,
@@ -28,53 +32,57 @@ const CreateBlogForm = () => {
 
   const handleCreate = (event) => {
     event.preventDefault();
+
     const newBlog = {
-      title: event.target.title.value,
-      author: event.target.author.value,
-      url: event.target.url.value,
+      title,
+      author,
+      url,
     };
-    event.target.title.value = ''
-    event.target.author.value = ''
-    event.target.url.value = ''
+
+    console.log(newBlog)
+
+    setTitle('')
+    setAuthor('')
+    setUrl('')
     newBlogMutation.mutate(newBlog);
   };
 
   return (
-  <Togglable buttonLabel="new blog" ref={blogFormRef}>
-    <h2>create new</h2>
     <form onSubmit={handleCreate}>
       <div>
-        title:
-        <input
+        <TextField label="title"
           data-testid="title"
           type="text"
           name="title"
           className="titleTextBox"
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
         />
       </div>
       <div>
-        author:
-        <input
+        <TextField label="author"
           data-testid="author"
           type="text"
           name="author"
           className="authorTextBox"
+          value={author}
+          onChange={({ target }) => setAuthor(target.value)}
         />
       </div>
       <div>
-        url:
-        <input
+        <TextField label="url"
           data-testid="url"
           type="text"
           name="url"
           className="urlTextBox"
+          value={url}
+          onChange={({ target }) => setUrl(target.value)}
         />
       </div>
-      <button data-testid="createBlogButton" type="submit">
+      <Button data-testid="createBlogButton" variant="contained" color="success" type="submit">
         create
-      </button>
+      </Button>
     </form>
-  </Togglable>
   );
 };
 

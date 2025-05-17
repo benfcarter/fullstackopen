@@ -7,6 +7,7 @@ import {
 import { Container } from '@mui/material'
 
 import LoginForm from "./components/LoginForm";
+import NavigationBar from "./components/NavigationBar";
 import Notification from "./components/Notification";
 import BlogListView from "./components/BlogListView";
 import BlogView from "./components/BlogView";
@@ -19,11 +20,6 @@ import UserContext from "./contexts/UserContext";
 
 const App = () => {
   const [user, userDispatch] = useContext(UserContext)
-
-  const handleLogout = () => {
-    userDispatch({ type: 'CLEAR_USER' })
-    window.localStorage.removeItem("loggedBlogAppUser");
-  };
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
@@ -58,15 +54,9 @@ const App = () => {
   return (
     <Container>
       <Router>
-        <div>
-          <Link data-testid="nav_blogs" style={padding} to="/">blogs</Link>
-          <Link data-testid="nav_users" style={padding} to="/users">users</Link>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </div>
-
         <Notification />
-        <h2>blog app</h2>
-
+        <NavigationBar />
+        <h2>Blog App (for fullstackopen)</h2>
         <Routes>
           <Route path="/" element={<BlogListView />} />
           <Route path="/blogs/:id" element={<BlogView />} />
