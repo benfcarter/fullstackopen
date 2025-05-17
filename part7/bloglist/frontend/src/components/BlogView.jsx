@@ -7,6 +7,8 @@ import { useUserQuery } from '../queries/userQuery'
 import { useUserValue } from '../contexts/UserContext'
 import { useShowNotification } from "../contexts/NotificationContext";
 
+import CommentList from "./CommentList"
+
 import blogService from "../services/blogs";
 
 const BlogView = () => {
@@ -69,6 +71,7 @@ const BlogView = () => {
       <div style={removeButtonStyle}>
         <button onClick={handleRemove}>remove</button>
       </div>
+      <CommentList id={blog.id} />
     </div>
   )
 }
