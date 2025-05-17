@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import {
+  TextField,
+  Button,
+} from '@mui/material'
 
 import { useShowNotification } from "../contexts/NotificationContext";
 import { useUserDispatch } from "../contexts/UserContext";
@@ -37,24 +41,21 @@ const LoginForm = () => {
   return (
     <form onSubmit={handleLogin}>
       <div>
-        username
-        <input
-          type="text"
+        <TextField label="username"
           value={username}
           name="Username"
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
-        password
-        <input
+        <TextField label="password"
           type="password"
           value={password}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <Button variant="contained" type="submit">login</Button>
     </form>
   );
 };
