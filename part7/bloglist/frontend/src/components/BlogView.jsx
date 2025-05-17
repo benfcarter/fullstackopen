@@ -71,7 +71,7 @@ const BlogView = () => {
       <div style={removeButtonStyle}>
         <button onClick={handleRemove}>remove</button>
       </div>
-      <CommentList id={blog.id} />
+      <CommentList id={id} />
     </div>
   )
 }

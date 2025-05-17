@@ -40,4 +40,9 @@ const remove = (blogToRemove) => {
   return request.then(response => response.data);
 };
 
-export default { getAll, setToken, create, replace, like, remove };
+const addComment = ({ blogId, comment }) => {
+  const request = axios.post(`${baseUrl}/${blogId}/comments`, { comment });
+  return request.then(response => response.data)
+}
+
+export default { getAll, setToken, create, replace, like, remove, addComment };
