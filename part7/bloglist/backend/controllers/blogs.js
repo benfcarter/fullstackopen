@@ -83,4 +83,19 @@ blogsRouter.put("/:id", async (request, response) => {
   response.json(populatedBlog);
 });
 
+blogsRouter.post("/:id/comments", async (request, response) => {
+  const id = request.params.id.toString();
+  const blog = await Blog.findById(id);
+
+  if (!blog) {
+    response.status(404).json(`No blog entry with id ${id} exists`);
+  }
+
+  blog.comments.push(request.body.comment)
+
+  await blog.save();
+
+  response.json(blog)
+})
+
 module.exports = blogsRouter;
