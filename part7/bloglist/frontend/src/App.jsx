@@ -4,6 +4,8 @@ import {
   Routes, Route, Link
 } from 'react-router-dom'
 
+import { Container } from '@mui/material'
+
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import BlogListView from "./components/BlogListView";
@@ -39,11 +41,13 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
-        <Notification />
-        <h2>log in to application</h2>
-        <LoginForm />
-      </div>
+      <Container>
+        <div>
+          <Notification />
+          <h2>log in to application</h2>
+          <LoginForm />
+        </div>
+      </Container>
     );
   }
 
@@ -52,23 +56,25 @@ const App = () => {
   }
 
   return (
-    <Router>
-      <div>
-        <Link data-testid="nav_blogs" style={padding} to="/">blogs</Link>
-        <Link data-testid="nav_users" style={padding} to="/users">users</Link>
-        {user.name} logged in <button onClick={handleLogout}>logout</button>
-      </div>
+    <Container>
+      <Router>
+        <div>
+          <Link data-testid="nav_blogs" style={padding} to="/">blogs</Link>
+          <Link data-testid="nav_users" style={padding} to="/users">users</Link>
+          {user.name} logged in <button onClick={handleLogout}>logout</button>
+        </div>
 
-      <Notification />
-      <h2>blog app</h2>
+        <Notification />
+        <h2>blog app</h2>
 
-      <Routes>
-        <Route path="/" element={<BlogListView />} />
-        <Route path="/blogs/:id" element={<BlogView />} />
-        <Route path="/users" element={<UserListView />} />
-        <Route path="/users/:id" element={<UserView /> } />
-      </Routes>
-    </Router>
+        <Routes>
+          <Route path="/" element={<BlogListView />} />
+          <Route path="/blogs/:id" element={<BlogView />} />
+          <Route path="/users" element={<UserListView />} />
+          <Route path="/users/:id" element={<UserView /> } />
+        </Routes>
+      </Router>
+    </Container>
   );
 };
 
