@@ -126,6 +126,11 @@ const typeDefs = `
       published: Int!
       genres: [String!]!
     ): Book
+
+    editAuthor(
+      name: String!
+      born: Int!
+    ): Author
   }
 `
 
@@ -136,7 +141,7 @@ const resolvers = {
     allBooks: (root, args) => books.filter(b => !args.author || b.author === args.author)
                                    .filter(b => !args.genre || b.genres.includes(args.genre)),
     allAuthors: () => authors.map(x => ({
-      name: x.name,
+      ...x,
       bookCount: books.filter(b => b.author === x.name).length
     })),
   },
@@ -155,6 +160,16 @@ const resolvers = {
       }
 
       return book
+    },
+    editAuthor: (root, args) => {
+      authors = authors.map(author => {
+        if(author.name !== args.name)
+          return author
+
+        return { ...author, born: args.born }
+      })
+
+      return authors.find(author => author.name === args.name)
     }
   }
 }
