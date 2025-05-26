@@ -60,12 +60,28 @@ const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
-    allBooks: async (root, args) => Book.find({}),
-    allAuthors: async () => Author.find({})
-//     authors.map(x => ({
-//      ...x,
-//      bookCount: books.filter(b => b.author === x.name).length
-//    })),
+    allBooks: async (root, args) => {
+      const query = {}
+
+      if(args.author) {
+        const authorEntry = await Author.findOne({ name: args.author })
+        query.author = authorEntry._id
+      }
+
+      if(args.genre) {
+        query.genres = args.genre
+      }
+
+      return Book.find(query).populate('author')
+    },
+    allAuthors: async () => {
+      const authorList = await Author.find({})
+      return authorList.map(a => ({
+        name: a.name,
+        born: a.born,
+        bookCount: a.books.length
+      }))
+    }
   },
   Mutation: {
     addBook: (root, args) => {
