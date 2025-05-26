@@ -59,13 +59,13 @@ const typeDefs = `
 const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
-    authorCount: () => Author.collection.countDocuments(),
-    allBooks: (root, args) => books.filter(b => !args.author || b.author === args.author)
-                                   .filter(b => !args.genre || b.genres.includes(args.genre)),
-    allAuthors: () => authors.map(x => ({
-      ...x,
-      bookCount: books.filter(b => b.author === x.name).length
-    })),
+    authorCount: async () => Author.collection.countDocuments(),
+    allBooks: async (root, args) => Book.find({}),
+    allAuthors: async () => Author.find({})
+//     authors.map(x => ({
+//      ...x,
+//      bookCount: books.filter(b => b.author === x.name).length
+//    })),
   },
   Mutation: {
     addBook: (root, args) => {
