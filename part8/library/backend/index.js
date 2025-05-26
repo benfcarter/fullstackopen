@@ -57,6 +57,11 @@ const typeDefs = `
 `
 
 const resolvers = {
+  Author: {
+    name: (root, args) => root.name,
+    born: (root, args) => root.born,
+    bookCount: async (root, args) => await Author.findOne({ name: root.name }).then(author => author.books.length)
+  },
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
@@ -74,40 +79,41 @@ const resolvers = {
 
       return Book.find(query).populate('author')
     },
-    allAuthors: async () => {
-      const authorList = await Author.find({})
-      return authorList.map(a => ({
-        name: a.name,
-        born: a.born,
-        bookCount: a.books.length
-      }))
-    }
+    allAuthors: async () => await Author.find({})
   },
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuid() }
-      books = books.concat(book)
+    addBook: async (root, args) => {
+      const author = await Author.findOne({ name: args.author })
 
-      if(!authors.find(x => x.name === book.author)) {
-        const author = {
-          name: book.author,
-          id: uuid()
-        }
-
-        authors = authors.concat(author)
+      if(!author) {
+        console.log("Author not found")
+        return
       }
 
-      return book
-    },
-    editAuthor: (root, args) => {
-      authors = authors.map(author => {
-        if(author.name !== args.name)
-          return author
-
-        return { ...author, born: args.born }
+      const newBook = new Book({
+        ...args,
+        author: author._id
       })
 
-      return authors.find(author => author.name === args.name)
+      const savedBook = await newBook.save()
+
+      console.log(author)
+      author.books = author.books.concat(savedBook._id)
+      await author.save()
+
+      return savedBook
+    },
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name })
+
+      if(!author) {
+        return
+      }
+
+      author.born = args.born
+      await author.save()
+
+      return author
     }
   }
 }
