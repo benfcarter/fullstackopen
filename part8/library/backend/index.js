@@ -1,5 +1,6 @@
 require('dotenv').config()
 
+const { GraphQLError } = require('graphql')
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 const { v1: uuid } = require('uuid')
@@ -83,11 +84,25 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
-      const author = await Author.findOne({ name: args.author })
+      let author = await Author.findOne({ name: args.author })
 
       if(!author) {
-        console.log("Author not found")
-        return
+        try {
+          const newAuthor = new Author({
+            name: args.author,
+            books: []
+          })
+
+          author = await newAuthor.save()
+        } catch(error) {
+          throw new GraphQLError('Saved new author failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.name,
+              error
+            }
+          })
+        }
       }
 
       const newBook = new Book({
@@ -95,19 +110,33 @@ const resolvers = {
         author: author._id
       })
 
-      const savedBook = await newBook.save()
+      let savedBook = null
+      try {
+        savedBook = await newBook.save()
+        author.books = author.books.concat(savedBook._id)
+        await author.save()
+      } catch(error) {
+        throw new GraphQLError('Saved book failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+            error
+          }
+        })
+      }
 
-      console.log(author)
-      author.books = author.books.concat(savedBook._id)
-      await author.save()
-
-      return savedBook
+      return savedBook.populate('author')
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name })
 
       if(!author) {
-        return
+        throw new GraphQLError('Author not found', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name
+          }
+        })
       }
 
       author.born = args.born
