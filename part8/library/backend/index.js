@@ -59,9 +59,7 @@ const typeDefs = `
 
 const resolvers = {
   Author: {
-    name: (root, args) => root.name,
-    born: (root, args) => root.born,
-    bookCount: async (root, args) => await Author.findOne({ name: root.name }).then(author => author.books.length)
+     bookCount: async (root, args) => await Book.find({ author: root._id }).then(bookList => bookList.length)
   },
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
@@ -113,8 +111,6 @@ const resolvers = {
       let savedBook = null
       try {
         savedBook = await newBook.save()
-        author.books = author.books.concat(savedBook._id)
-        await author.save()
       } catch(error) {
         throw new GraphQLError('Saved book failed', {
           extensions: {
