@@ -29,3 +29,11 @@ export const ALL_GENRES = gql`
     allGenres
   }
 `
+
+export const FAVORITE_GENRE = gql`
+  query {
+    me {
+      favoriteGenre
+    }
+  }
+`
