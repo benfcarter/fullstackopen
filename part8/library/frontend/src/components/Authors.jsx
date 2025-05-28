@@ -5,16 +5,19 @@ import Select from 'react-select'
 import { ALL_AUTHORS } from '../queries/queries'
 import { UPDATE_AUTHOR } from '../queries/mutations'
 
-const Authors = (props) => {
+const Authors = ({ show, setError }) => {
   const [selectedName, setSelectedName] = useState(null)
   const [birthyear, setBirthyear] = useState('')
 
   const allAuthorsResult = useQuery(ALL_AUTHORS)
   const [ updateAuthor ] = useMutation(UPDATE_AUTHOR, {
-    refetchQueries: [ { query: ALL_AUTHORS } ]
+    refetchQueries: [ { query: ALL_AUTHORS } ],
+    onError: (error) => {
+      setError(error.graphQLErrors[0].message)
+    }
   })
 
-  if (!props.show) {
+  if (!show) {
     return null
   }
 
