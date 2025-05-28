@@ -52,6 +52,7 @@ const typeDefs = `
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+    allGenres: [String!]!
     me: User
   }
 
@@ -102,6 +103,9 @@ const resolvers = {
       return Book.find(query).populate('author')
     },
     allAuthors: async () => await Author.find({}),
+    allGenres: async () => await Book.find({})
+      .then(response => [...new Set(response.reduce((a, b) => a.concat(b.genres), []))])
+      .then(response => { response.sort(); return response; }),
     me: (root, args, context) => context.currentUser
   },
   Mutation: {
